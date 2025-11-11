@@ -1,13 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Offers from './components/Offers';
-import Plan from './components/Plan';
-import Rooms from './components/Rooms';
-import ImageSlider from './components/ImageSlider';
 import Footer from './components/Footer';
-import Aboutus from './components/Aboutus';
-import Contact from './components/Contact';
 import Articlepage from './components/Pages/Articlepage';
 import Navbarblack from './components/Navbarblack';
 import ISFED from './components/Pages/ISFED';

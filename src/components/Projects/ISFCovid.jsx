@@ -2,8 +2,6 @@ import React from 'react'
 import { FaFacebookSquare, FaTwitter, FaPinterest } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 
-let date = ''
-
 const ISFCovid = () => {
     return (
         <div id="card1" className="flex flex-col md:flex-row md:max-w-7xl mx-auto my-8 shadow-lg rounded-lg">

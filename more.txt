@@ -1,0 +1,2 @@
+Add stripe api to implement donations
+Add a bunch of more tabs to add diferent sections of the website
