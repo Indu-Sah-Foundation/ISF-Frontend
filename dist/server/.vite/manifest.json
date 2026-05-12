@@ -1,0 +1,290 @@
+{
+  "%23tanstack-start-plugin-adapters": {
+    "file": "assets/__23tanstack-start-plugin-adapters-Cwee5PKy.js",
+    "name": "__23tanstack-start-plugin-adapters",
+    "src": "%23tanstack-start-plugin-adapters",
+    "isDynamicEntry": true
+  },
+  "/Users/rohansah/ISF-Frontend/src/styles.css": {
+    "file": "assets/styles-DEp-mTdW.css",
+    "src": "/Users/rohansah/ISF-Frontend/src/styles.css"
+  },
+  "_SiteShell-DYoRl1dq.js": {
+    "file": "assets/SiteShell-DYoRl1dq.js",
+    "name": "SiteShell",
+    "imports": [
+      "_server-cqlUrkpC.js",
+      "_router-Dff4uBNA.js"
+    ],
+    "assets": [
+      "assets/isf-logo-yPvOMWt7.png"
+    ]
+  },
+  "_api-CN7HS6fA.js": {
+    "file": "assets/api-CN7HS6fA.js",
+    "name": "api",
+    "imports": [
+      "_router-Dff4uBNA.js",
+      "_server-cqlUrkpC.js"
+    ]
+  },
+  "_program-education-Cq8pBwtq.js": {
+    "file": "assets/program-education-Cq8pBwtq.js",
+    "name": "program-education",
+    "assets": [
+      "assets/program-robotics-CkB4SCwm.jpg",
+      "assets/program-health-n8r8qrAx.jpg",
+      "assets/program-education-X-z2fIxB.jpg"
+    ]
+  },
+  "_program-women-hhILutJ8.js": {
+    "file": "assets/program-women-hhILutJ8.js",
+    "name": "program-women",
+    "assets": [
+      "assets/program-women-DKuESxSH.jpg"
+    ]
+  },
+  "_router-Dff4uBNA.js": {
+    "file": "assets/router-Dff4uBNA.js",
+    "name": "router",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-cqlUrkpC.js"
+    ],
+    "dynamicImports": [
+      "src/routes/volunteers.tsx?tsr-split=component",
+      "src/routes/stories.tsx?tsr-split=component",
+      "src/routes/programs.tsx?tsr-split=component",
+      "src/routes/news.tsx?tsr-split=component",
+      "src/routes/join-us.tsx?tsr-split=component",
+      "src/routes/events.tsx?tsr-split=component",
+      "src/routes/donate.tsx?tsr-split=component",
+      "src/routes/contact.tsx?tsr-split=component",
+      "src/routes/achievements.tsx?tsr-split=component",
+      "src/routes/about.tsx?tsr-split=component",
+      "src/routes/index.tsx?tsr-split=component",
+      "src/routes/stories.$slug.tsx?tsr-split=notFoundComponent",
+      "src/routes/stories.$slug.tsx?tsr-split=component"
+    ],
+    "assets": [
+      "assets/styles-DEp-mTdW.css"
+    ]
+  },
+  "_server-cqlUrkpC.js": {
+    "file": "assets/server-cqlUrkpC.js",
+    "name": "server",
+    "isDynamicEntry": true,
+    "dynamicImports": [
+      "tanstack-start-manifest:v",
+      "_router-Dff4uBNA.js",
+      "src/start.ts",
+      "%23tanstack-start-plugin-adapters"
+    ]
+  },
+  "_worker-entry-BPF63Cud.js": {
+    "file": "assets/worker-entry-BPF63Cud.js",
+    "name": "worker-entry",
+    "dynamicImports": [
+      "_server-cqlUrkpC.js"
+    ]
+  },
+  "src/assets/hero.jpg": {
+    "file": "assets/hero-lFF4froF.jpg",
+    "src": "src/assets/hero.jpg"
+  },
+  "src/assets/isf-logo.png": {
+    "file": "assets/isf-logo-yPvOMWt7.png",
+    "src": "src/assets/isf-logo.png"
+  },
+  "src/assets/program-education.jpg": {
+    "file": "assets/program-education-X-z2fIxB.jpg",
+    "src": "src/assets/program-education.jpg"
+  },
+  "src/assets/program-health.jpg": {
+    "file": "assets/program-health-n8r8qrAx.jpg",
+    "src": "src/assets/program-health.jpg"
+  },
+  "src/assets/program-robotics.jpg": {
+    "file": "assets/program-robotics-CkB4SCwm.jpg",
+    "src": "src/assets/program-robotics.jpg"
+  },
+  "src/assets/program-women.jpg": {
+    "file": "assets/program-women-DKuESxSH.jpg",
+    "src": "src/assets/program-women.jpg"
+  },
+  "src/routes/about.tsx?tsr-split=component": {
+    "file": "assets/about-tlpyTI3q.js",
+    "name": "about",
+    "src": "src/routes/about.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-cqlUrkpC.js",
+      "_router-Dff4uBNA.js",
+      "_SiteShell-DYoRl1dq.js",
+      "_program-women-hhILutJ8.js"
+    ]
+  },
+  "src/routes/achievements.tsx?tsr-split=component": {
+    "file": "assets/achievements-Bs_Zky8i.js",
+    "name": "achievements",
+    "src": "src/routes/achievements.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-cqlUrkpC.js",
+      "_router-Dff4uBNA.js",
+      "_SiteShell-DYoRl1dq.js"
+    ]
+  },
+  "src/routes/contact.tsx?tsr-split=component": {
+    "file": "assets/contact-E7SkLC01.js",
+    "name": "contact",
+    "src": "src/routes/contact.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-cqlUrkpC.js",
+      "_SiteShell-DYoRl1dq.js",
+      "_router-Dff4uBNA.js"
+    ]
+  },
+  "src/routes/donate.tsx?tsr-split=component": {
+    "file": "assets/donate-8TzM-l5T.js",
+    "name": "donate",
+    "src": "src/routes/donate.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-cqlUrkpC.js",
+      "_api-CN7HS6fA.js",
+      "_router-Dff4uBNA.js",
+      "_SiteShell-DYoRl1dq.js"
+    ]
+  },
+  "src/routes/events.tsx?tsr-split=component": {
+    "file": "assets/events-BW4KK4FE.js",
+    "name": "events",
+    "src": "src/routes/events.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-cqlUrkpC.js",
+      "_router-Dff4uBNA.js",
+      "_SiteShell-DYoRl1dq.js",
+      "_program-education-Cq8pBwtq.js",
+      "_program-women-hhILutJ8.js"
+    ]
+  },
+  "src/routes/index.tsx?tsr-split=component": {
+    "file": "assets/index-6PmNCzPq.js",
+    "name": "index",
+    "src": "src/routes/index.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-cqlUrkpC.js",
+      "_router-Dff4uBNA.js",
+      "_api-CN7HS6fA.js",
+      "_SiteShell-DYoRl1dq.js",
+      "_program-education-Cq8pBwtq.js"
+    ],
+    "assets": [
+      "assets/hero-lFF4froF.jpg"
+    ]
+  },
+  "src/routes/join-us.tsx?tsr-split=component": {
+    "file": "assets/join-us-Cgz3nF43.js",
+    "name": "join-us",
+    "src": "src/routes/join-us.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-cqlUrkpC.js",
+      "_router-Dff4uBNA.js"
+    ]
+  },
+  "src/routes/news.tsx?tsr-split=component": {
+    "file": "assets/news-6wIkN1yz.js",
+    "name": "news",
+    "src": "src/routes/news.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-cqlUrkpC.js",
+      "_router-Dff4uBNA.js"
+    ]
+  },
+  "src/routes/programs.tsx?tsr-split=component": {
+    "file": "assets/programs-DT96GweO.js",
+    "name": "programs",
+    "src": "src/routes/programs.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-cqlUrkpC.js",
+      "_router-Dff4uBNA.js"
+    ]
+  },
+  "src/routes/stories.$slug.tsx?tsr-split=component": {
+    "file": "assets/stories._slug-TSyARgiR.js",
+    "name": "stories._slug",
+    "src": "src/routes/stories.$slug.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-cqlUrkpC.js",
+      "_router-Dff4uBNA.js",
+      "_api-CN7HS6fA.js",
+      "_SiteShell-DYoRl1dq.js"
+    ]
+  },
+  "src/routes/stories.$slug.tsx?tsr-split=notFoundComponent": {
+    "file": "assets/stories._slug-DCaTsr7S.js",
+    "name": "stories._slug",
+    "src": "src/routes/stories.$slug.tsx?tsr-split=notFoundComponent",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-cqlUrkpC.js",
+      "_router-Dff4uBNA.js",
+      "_SiteShell-DYoRl1dq.js"
+    ]
+  },
+  "src/routes/stories.tsx?tsr-split=component": {
+    "file": "assets/stories-_ohIdHiG.js",
+    "name": "stories",
+    "src": "src/routes/stories.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-cqlUrkpC.js",
+      "_router-Dff4uBNA.js",
+      "_api-CN7HS6fA.js",
+      "_SiteShell-DYoRl1dq.js"
+    ]
+  },
+  "src/routes/volunteers.tsx?tsr-split=component": {
+    "file": "assets/volunteers-B3Pmeasb.js",
+    "name": "volunteers",
+    "src": "src/routes/volunteers.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_server-cqlUrkpC.js",
+      "_router-Dff4uBNA.js",
+      "_SiteShell-DYoRl1dq.js"
+    ]
+  },
+  "src/start.ts": {
+    "file": "assets/start-Bh1IW6Rt.js",
+    "name": "start",
+    "src": "src/start.ts",
+    "isDynamicEntry": true,
+    "imports": [
+      "_worker-entry-BPF63Cud.js"
+    ]
+  },
+  "tanstack-start-manifest:v": {
+    "file": "assets/_tanstack-start-manifest_v-7bmvAxdr.js",
+    "name": "_tanstack-start-manifest_v",
+    "src": "tanstack-start-manifest:v",
+    "isDynamicEntry": true
+  },
+  "virtual:cloudflare/worker-entry": {
+    "file": "index.js",
+    "name": "index",
+    "src": "virtual:cloudflare/worker-entry",
+    "isEntry": true,
+    "imports": [
+      "_worker-entry-BPF63Cud.js"
+    ]
+  }
+}
