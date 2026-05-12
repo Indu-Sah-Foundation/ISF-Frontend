@@ -13,8 +13,8 @@ export function Logo({ compact = false }: { compact?: boolean }) {
         alt="Indu Sah Foundation"
         className={
           compact
-            ? "h-16 sm:h-20 md:h-24 w-auto object-contain shrink-0"
-            : "h-24 sm:h-28 md:h-32 lg:h-36 xl:h-40 w-auto object-contain shrink-0"
+            ? "h-20 sm:h-24 md:h-28 w-auto object-contain shrink-0"
+            : "h-32 sm:h-36 md:h-40 lg:h-48 xl:h-56 w-auto object-contain shrink-0"
         }
       />
     </Link>

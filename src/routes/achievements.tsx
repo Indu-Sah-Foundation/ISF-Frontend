@@ -16,9 +16,6 @@ export const Route = createFileRoute("/achievements")({
   component: AchievementsPage,
 });
 
-// Each entry has a `slot` ID — drop the actual certificate scan into
-// public/certificates/<slot>.jpg (or .png) and it'll render in the sketch frame.
-// Until you upload one, the slot shows a hand-drawn placeholder.
 const recognitions = [
   {
     slot: "netrawati",
