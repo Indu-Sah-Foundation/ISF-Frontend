@@ -1,0 +1,169 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ink: var(--ink);
+  --color-cream: var(--cream);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+}
+
+:root {
+  --radius: 0.5rem;
+  /* ISF palette — ocean blue + sun yellow, drawn from the foundation logo */
+  --background: oklch(0.99 0.005 240);
+  --foreground: oklch(0.18 0.02 240);
+  --ink: oklch(0.18 0.02 240);
+  --cream: oklch(0.985 0.008 90);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.02 240);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.02 240);
+  /* Deep ocean blue — matches the darker wave in the mark */
+  --primary: oklch(0.45 0.13 235);
+  --primary-foreground: oklch(0.99 0.005 240);
+  --secondary: oklch(0.96 0.012 235);
+  --secondary-foreground: oklch(0.18 0.02 240);
+  --muted: oklch(0.96 0.012 235);
+  --muted-foreground: oklch(0.45 0.025 235);
+  /* Sun yellow accent */
+  --accent: oklch(0.85 0.16 85);
+  --accent-foreground: oklch(0.18 0.02 240);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(0.18 0.02 240 / 0.1);
+  --input: oklch(0.18 0.02 240 / 0.15);
+  --ring: oklch(0.45 0.13 235);
+
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+.dark {
+  --background: oklch(0.16 0.02 240);
+  --foreground: oklch(0.97 0.005 240);
+  --card: oklch(0.21 0.025 240);
+  --card-foreground: oklch(0.97 0.005 240);
+  --popover: oklch(0.21 0.025 240);
+  --popover-foreground: oklch(0.97 0.005 240);
+  --primary: oklch(0.65 0.14 235);
+  --primary-foreground: oklch(0.16 0.02 240);
+  --secondary: oklch(0.26 0.022 240);
+  --secondary-foreground: oklch(0.97 0.005 240);
+  --muted: oklch(0.26 0.022 240);
+  --muted-foreground: oklch(0.72 0.02 235);
+  --accent: oklch(0.78 0.15 85);
+  --accent-foreground: oklch(0.16 0.02 240);
+  --border: oklch(1 0 0 / 0.1);
+  --input: oklch(1 0 0 / 0.15);
+  --ring: oklch(0.65 0.14 235);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-display);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: oklch(0.85 0.16 85 / 0.45);
+    color: oklch(0.18 0.02 240);
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+
+  /* Hand-drawn / colored-pencil aesthetic */
+  .sketch-border {
+    border: 2px solid var(--color-ink);
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  }
+  .sketch-border-alt {
+    border: 2px solid var(--color-ink);
+    border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px;
+  }
+  .pencil-underline {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'><path d='M2 7 Q40 2 80 6 T160 6 T198 5' stroke='%23eab308' stroke-width='4' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 100% 0.45em;
+    padding-bottom: 0.1em;
+  }
+  .scribble-divider {
+    height: 14px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 14' preserveAspectRatio='none'><path d='M2 7 Q50 1 100 7 T200 7 T300 7 T398 7' stroke='currentColor' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+  .pencil-shadow {
+    box-shadow:
+      2px 3px 0 -1px var(--color-ink),
+      4px 6px 0 -2px color-mix(in oklab, var(--color-primary) 70%, transparent);
+  }
+}
+
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-reveal { animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* Article prose */
+.prose-article {
+  max-width: 70ch;
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: var(--color-foreground);
+}
+.prose-article h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.03em; margin-top: 2rem; margin-bottom: 1rem; line-height: 1.1; }
+.prose-article h2 { font-size: 1.875rem; font-weight: 800; letter-spacing: -0.02em; margin-top: 2.5rem; margin-bottom: 1rem; }
+.prose-article h3 { font-size: 1.375rem; font-weight: 700; margin-top: 2rem; margin-bottom: 0.75rem; }
+.prose-article p { margin-bottom: 1.25rem; }
+.prose-article a { color: var(--color-primary); text-decoration: underline; text-underline-offset: 3px; }
+.prose-article ul, .prose-article ol { margin: 1rem 0 1.25rem 1.5rem; }
+.prose-article ul { list-style: disc; }
+.prose-article ol { list-style: decimal; }
+.prose-article li { margin-bottom: 0.5rem; }
+.prose-article blockquote { border-left: 3px solid var(--color-primary); padding-left: 1.25rem; margin: 1.5rem 0; font-style: italic; color: var(--color-muted-foreground); }
+.prose-article code { background: var(--color-muted); padding: 0.15em 0.35em; border-radius: 4px; font-family: var(--font-mono); font-size: 0.9em; }
+.prose-article pre { background: var(--color-ink); color: var(--color-cream); padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0; }
+.prose-article img { border-radius: 8px; margin: 1.5rem 0; }
