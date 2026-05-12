@@ -1,0 +1,1 @@
+const s="/assets/program-education-X-z2fIxB.jpg",a="/assets/program-health-n8r8qrAx.jpg",r="/assets/program-water-BLMxuorA.jpg",t="/assets/program-robotics-CkB4SCwm.jpg";export{s as e,a as h,t as r,r as w};
