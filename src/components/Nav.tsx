@@ -27,7 +27,6 @@ export function Nav() {
               key={l.to}
               to={l.to}
               className="nav-link whitespace-nowrap"
-              activeProps={{ className: "text-yellow-400" }}
             >
               {l.label}
             </Link>
@@ -59,8 +58,7 @@ export function Nav() {
                 key={l.to}
                 to={l.to}
                 onClick={() => setOpen(false)}
-                className="nav-link py-3 border-b border-border last:border-b-0"
-                activeProps={{ className: "text-yellow-400" }}
+                className="nav-link py-3 border-b border-border last:border-b-0 hover:text-gray-300"
               >
                 {l.label}
               </Link>
