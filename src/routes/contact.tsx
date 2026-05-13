@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Mail, MapPin, Phone, User } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { SiteShell } from "@/components/SiteShell";
 
 export const Route = createFileRoute("/contact")({
@@ -83,31 +83,6 @@ function ContactPage() {
                 indusahfoundation@gmail.com
               </a>
             </p>
-          </div>
-          <div>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
-              Founders
-            </h3>
-            <ul className="space-y-3 font-display">
-              <li className="flex items-start gap-3">
-                <User size={18} className="mt-1 text-primary shrink-0" />
-                <span>
-                  Dr. Vijay Sah
-                  <span className="block text-xs font-mono text-muted-foreground">
-                    President & Executive Director
-                  </span>
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <User size={18} className="mt-1 text-primary shrink-0" />
-                <span>
-                  Lal Babu Sah
-                  <span className="block text-xs font-mono text-muted-foreground">
-                    Co-founder
-                  </span>
-                </span>
-              </li>
-            </ul>
           </div>
         </aside>
 
