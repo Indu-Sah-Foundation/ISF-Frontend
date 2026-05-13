@@ -1,106 +1,70 @@
-import { Link } from "@tanstack/react-router";
-import { Facebook, Instagram, Twitter } from "lucide-react";
-import { Logo } from "./Logo";
+import { Facebook, Mail, MapPin, Phone } from "lucide-react";
 
 export function Footer() {
   return (
     <footer className="border-t border-border mt-32">
-      <div className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-12 gap-10 md:gap-16">
-        <div className="md:col-span-5 space-y-4">
-          <Logo />
-          <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">
-            For better health and education.
+      <div className="max-w-7xl mx-auto px-6 py-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="space-y-3">
+          <h4 className="font-mono text-[10px] uppercase text-muted-foreground tracking-[0.2em]">
+            Head Office
+          </h4>
+          <p className="text-sm flex items-start gap-2">
+            <MapPin size={16} className="mt-0.5 text-primary shrink-0" />
+            <span>Loharpatti–2, Mahottari<br />Province 2, Nepal</span>
           </p>
         </div>
-
-        <FooterCol
-          className="md:col-span-3"
-          title="Explore"
-          links={[
-            { to: "/about", label: "About" },
-            { to: "/gallery", label: "Gallery" },
-            { to: "/events", label: "Projects" },
-            { to: "/stories", label: "Letters" },
-            { to: "/achievements", label: "Achievements" },
-            { to: "/volunteers", label: "Volunteers" },
-            { to: "/contact", label: "Contact" },
-            { to: "/donate", label: "Donate" },
-          ]}
-        />
-
-        <div className="md:col-span-4 space-y-5">
+        <div className="space-y-3">
+          <h4 className="font-mono text-[10px] uppercase text-muted-foreground tracking-[0.2em]">
+            Branch Office
+          </h4>
+          <p className="text-sm flex items-start gap-2">
+            <MapPin size={16} className="mt-0.5 text-primary shrink-0" />
+            <span>Hadigau–5, Kathmandu, Nepal</span>
+          </p>
+        </div>
+        <div className="space-y-3">
+          <h4 className="font-mono text-[10px] uppercase text-muted-foreground tracking-[0.2em]">
+            Phone
+          </h4>
+          <p className="text-sm flex items-start gap-2">
+            <Phone size={16} className="mt-0.5 text-primary shrink-0" />
+            <span>
+              <a href="tel:+9779841256519" className="hover:text-primary block">+977-9841256519</a>
+              <a href="tel:+9779805171027" className="hover:text-primary block">+977-9805171027</a>
+              <span className="text-xs font-mono text-muted-foreground">WhatsApp / Viber</span>
+            </span>
+          </p>
+        </div>
+        <div className="space-y-3">
           <h4 className="font-mono text-[10px] uppercase text-muted-foreground tracking-[0.2em]">
             Connect
           </h4>
-          <p className="text-sm">
-            <a
-              href="mailto:indusahfoundation@gmail.com"
-              className="hover:text-primary transition-colors"
-            >
-              indusahfoundation@gmail.com
-            </a>
-          </p>
-          <div className="flex gap-5 pt-1">
-            <a
-              href="https://www.facebook.com/indusahfoundation/"
-              aria-label="Facebook"
-              target="_blank"
-              rel="noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Facebook size={18} />
-            </a>
-            <a
-              href="#"
-              aria-label="Instagram"
-              className="text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Instagram size={18} />
-            </a>
-            <a
-              href="#"
-              aria-label="Twitter"
-              className="text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Twitter size={18} />
-            </a>
-          </div>
+          <a
+            href="mailto:indusahfoundation@gmail.com"
+            className="flex items-start gap-2 text-sm hover:text-primary"
+          >
+            <Mail size={16} className="mt-0.5 text-primary shrink-0" />
+            <span className="break-all">indusahfoundation@gmail.com</span>
+          </a>
+          <a
+            href="https://www.facebook.com/indusahfoundation/"
+            aria-label="Facebook"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-start gap-2 text-sm text-muted-foreground hover:text-primary"
+          >
+            <Facebook size={16} className="mt-0.5 text-primary shrink-0" />
+            facebook.com/indusahfoundation
+          </a>
         </div>
       </div>
 
-      <div className="border-t border-border">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row gap-2 justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+      <div className="border-t border-border bg-secondary/30">
+        <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row gap-3 justify-between font-display text-base md:text-lg font-semibold tracking-tight">
           <p>© {new Date().getFullYear()} Indu Sah Foundation</p>
-          <p>Loharpatti · Mahottari · Nepal</p>
+          <p className="text-muted-foreground">Loharpatti · Mahottari · Nepal</p>
         </div>
       </div>
     </footer>
-  );
-}
-
-function FooterCol({
-  title,
-  links,
-  className,
-}: {
-  title: string;
-  links: { to: string; label: string }[];
-  className?: string;
-}) {
-  return (
-    <div className={`space-y-5 ${className ?? ""}`}>
-      <h4 className="font-mono text-[10px] uppercase text-muted-foreground tracking-[0.2em]">
-        {title}
-      </h4>
-      <ul className="space-y-3 text-sm">
-        {links.map((l, i) => (
-          <li key={i}>
-            <Link to={l.to} className="hover:text-primary transition-colors">
-              {l.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }
