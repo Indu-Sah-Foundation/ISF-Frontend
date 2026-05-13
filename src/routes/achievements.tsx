@@ -124,7 +124,6 @@ function CertificateCard({
             className="w-full h-full object-contain p-3"
             onError={(e) => {
               const t = e.currentTarget;
-              // Try .png, then hide the img and reveal the placeholder.
               if (t.dataset.tried !== "png") {
                 t.dataset.tried = "png";
                 t.src = `/certificates/${slot}.png`;
