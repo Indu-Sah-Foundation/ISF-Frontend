@@ -82,8 +82,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "Indu Sah Foundation — For Better Health & Education" },
       { name: "twitter:description", content: "Indu Sah Foundation is a non-profit working in Nepal for the health, education and dignity of underprivileged children." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/30404869-1458-4304-ab40-9989c345c1ff/id-preview-272ec235--87d42fa9-ad9a-46ed-a947-aa54ce492aed.lovable.app-1778543440164.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/30404869-1458-4304-ab40-9989c345c1ff/id-preview-272ec235--87d42fa9-ad9a-46ed-a947-aa54ce492aed.lovable.app-1778543440164.png" },
     ],
     links: [
       {

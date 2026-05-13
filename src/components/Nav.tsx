@@ -15,7 +15,7 @@ const links = [
 export function Nav() {
   const [open, setOpen] = useState(false);
   return (
-    <nav className="top-0 z-50 w-full bg-background backdrop-opacity-100 backdrop-blur-md border-b border-border">
+    <nav className="navbar-transparent top-0 z-50 w-full border-b border-border/50">
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10 h-24 sm:h-28 md:h-32 lg:h-36 flex items-center justify-between gap-4">
         {/* Logo on the far left, big and dynamic */}
         <Logo />
