@@ -2,12 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/SiteShell";
+import { SketchImage } from "@/components/SketchImage";
 import { api } from "@/lib/api";
 import heroImg from "@/assets/hero.jpg";
 import eduImg from "@/assets/program-education.jpg";
 import healthImg from "@/assets/program-health.jpg";
-import waterImg from "@/assets/program-water.jpg";
-import womenImg from "@/assets/program-women.jpg";
 import roboticsImg from "@/assets/program-robotics.jpg";
 
 export const Route = createFileRoute("/")({
@@ -38,9 +37,9 @@ function HomePage() {
   });
 
   return (
-    <SiteShell>
-      {/* Hero */}
-      <section className="relative h-[92vh] min-h-[640px] flex flex-col justify-end p-6 md:p-12 overflow-hidden">
+    <SiteShell fullBleed>
+      {/* Hero — full viewport on load */}
+      <section className="relative h-screen min-h-[640px] w-full flex flex-col justify-end p-6 md:p-12 overflow-hidden">
         <img
           src={heroImg}
           alt="Children in a Nepali classroom"
@@ -49,28 +48,15 @@ function HomePage() {
           height={1280}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/40 to-ink/20" />
-        <div className="relative z-10 max-w-4xl animate-reveal">
+        <div className="relative z-10 max-w-6xl animate-reveal">
           <span className="inline-block font-mono text-[11px] uppercase tracking-[0.25em] text-cream/80 mb-6 border border-cream/30 px-3 py-1.5">
             Loharpatti, Nepal
           </span>
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-extrabold text-cream tracking-tighter leading-[0.92] mb-10 text-balance">
-            For better health <br className="hidden md:block" />
-            <span className="italic font-light">&amp;</span> <span className="pencil-underline">education</span>.
+          <h1 className="font-display font-extrabold text-cream tracking-tighter leading-[0.95] mb-10 text-balance whitespace-normal text-[clamp(2.25rem,6.5vw,6rem)]">
+            For better <span className="pencil-underline">health</span>{" "}
+            <span className="italic font-light">&amp;</span>{" "}
+            <span className="pencil-underline">education</span>.
           </h1>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              to="/programs"
-              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-7 py-4 font-display font-bold uppercase text-xs tracking-[0.2em] hover:brightness-110 transition-all"
-            >
-              Explore projects <ArrowRight size={14} />
-            </Link>
-            <Link
-              to="/donate"
-              className="inline-flex items-center gap-2 bg-cream/10 backdrop-blur text-cream border border-cream/30 px-7 py-4 font-display font-bold uppercase text-xs tracking-[0.2em] hover:bg-cream/20 transition-all"
-            >
-              Donate
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -93,23 +79,27 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="border-y border-border py-16 bg-secondary/40">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-3 gap-8">
-          {[
-            { v: "3,000+", l: "Dental Patients Served" },
-            { v: "6+", l: "Years on the Ground" },
-            { v: "100%", l: "Local Leadership" },
-          ].map((s) => (
-            <div key={s.l} className="space-y-1">
-              <div className="font-display text-5xl md:text-6xl font-extrabold tracking-tighter">
-                {s.v}
+      {/* Impact */}
+      <section className="border-y border-border py-20 bg-secondary/40">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <span className="font-mono text-primary text-xs font-medium uppercase tracking-[0.2em] mb-10 block">
+            Impact
+          </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 justify-items-center">
+            {[
+              { v: "3,000+", l: "Dental Patients Served" },
+              { v: "6+", l: "Years on the Ground" },
+            ].map((s) => (
+              <div key={s.l} className="space-y-2 text-center">
+                <div className="font-display text-6xl md:text-7xl font-extrabold tracking-tighter">
+                  {s.v}
+                </div>
+                <div className="font-mono text-[11px] uppercase text-muted-foreground tracking-[0.18em]">
+                  {s.l}
+                </div>
               </div>
-              <div className="font-mono text-[11px] uppercase text-muted-foreground tracking-[0.18em]">
-                {s.l}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
@@ -125,32 +115,32 @@ function HomePage() {
             </h2>
           </div>
           <Link
-            to="/programs"
+            to="/events"
             className="font-mono text-xs uppercase underline underline-offset-4 decoration-primary inline-flex items-center gap-1.5"
           >
             View all <ArrowUpRight size={14} />
           </Link>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {programs.map((p, i) => (
             <article
               key={p.num}
-              className="group cursor-pointer animate-reveal flex flex-col overflow-hidden bg-card sketch-border pencil-shadow transition-transform hover:-translate-y-1"
+              className="flex flex-col"
               style={{ animationDelay: `${i * 80}ms` }}
             >
-              <div className="relative overflow-hidden aspect-[4/5]">
-                <img
-                  src={p.img}
-                  alt={p.title}
-                  loading="lazy"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute top-4 left-4 font-mono text-5xl md:text-6xl text-cream/40 font-extrabold mix-blend-overlay">
-                  {p.num}
-                </div>
-              </div>
-              <div className="p-6 flex-1 flex flex-col">
+              <SketchImage
+                src={p.img}
+                alt={p.title}
+                variant={i % 2 === 0 ? "default" : "alt"}
+                className="aspect-[4/5]"
+                badge={
+                  <span className="absolute top-4 left-4 font-mono text-5xl md:text-6xl text-cream/60 font-extrabold mix-blend-overlay">
+                    {p.num}
+                  </span>
+                }
+              />
+              <div className="pt-6">
                 <h3 className="font-display text-xl md:text-2xl font-extrabold mb-2 tracking-tight">
                   {p.title}
                 </h3>
@@ -163,6 +153,7 @@ function HomePage() {
         </div>
       </section>
 
+
       {/* Stories from backend */}
       <section className="py-24 px-6 bg-secondary/40 border-y border-border">
         <div className="max-w-7xl mx-auto">
@@ -172,7 +163,7 @@ function HomePage() {
                 Recent
               </span>
               <h2 className="font-display text-4xl md:text-5xl font-extrabold tracking-tighter text-balance">
-                Letters from the foundation
+                Blogs
               </h2>
             </div>
             <Link
