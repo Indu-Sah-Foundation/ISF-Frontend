@@ -1,5 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "@/components/SiteShell";
+import { SketchImage } from "@/components/SketchImage";
 import roboticsImg from "@/assets/program-robotics.jpg";
 import healthImg from "@/assets/program-health.jpg";
 import eduImg from "@/assets/program-education.jpg";
@@ -22,12 +23,12 @@ export const Route = createFileRoute("/events")({
 function ProjectsPage() {
   return (
     <SiteShell>
-      <header className="px-6 pt-16 pb-12 max-w-7xl mx-auto">
+      <header className="px-6 pb-12 max-w-7xl mx-auto">
         <span className="font-mono text-primary text-xs uppercase tracking-[0.2em]">
           Projects
         </span>
         <h1 className="font-display text-5xl md:text-7xl font-extrabold tracking-tighter mt-4 text-balance max-w-4xl">
-          Current &amp; upcoming work.
+          Current &amp; <span className="pencil-underline">upcoming</span> work.
         </h1>
       </header>
 
@@ -69,9 +70,9 @@ function ProjectsPage() {
               <BulletList
                 items={[
                   "Utilize LEGO Spike Prime Robots to provide a simple and effective way for hands-on learning",
-                  "Establish FIRST Lego League (FLL) teams in Nepal through the FIRST organization, immersing children in STEM with practical experiences",
-                  "Engage them in complex problem-solving through designing, engineering, and programming the Spike Prime robot to complete FLL game-field tasks",
-                  "Foster Innovation by challenging them to identify a specific problem in their community and solve it innovatively — then present it to FLL judges",
+                  "Establish FIRST Lego League (FLL) teams in Nepal through the FIRST organization",
+                  "Engage them in complex problem-solving through designing, engineering, and programming",
+                  "Foster Innovation by challenging them to identify a specific problem in their community and solve it innovatively",
                 ]}
               />
             </Block>
@@ -82,7 +83,7 @@ function ProjectsPage() {
       {/* CURRENT — ISF SMILE */}
       <section className="border-t border-border bg-secondary/40 py-16 sm:py-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <ProjectHeading label="Current Project" title="ISF SMILE" img={healthImg} />
+          <ProjectHeading label="Current Project" title="ISF SMILE" img={healthImg} alt />
           <div className="grid md:grid-cols-3 gap-10 mt-12">
             <Lede>
               ISF SMILE is the current project through which we are committed
@@ -95,10 +96,8 @@ function ProjectsPage() {
               <Block heading="Concept &amp; Execution">
                 <p>
                   The project is the concept of Dr. Vijay Sah, the president of
-                  Indu Sah Foundation, who has been dreaming of serving his
-                  community. ISF SMILE provides all possible treatments through
-                  a MOBILE DENTAL CLINIC — free of cost. The program strictly
-                  follows all COVID-19 guidelines.
+                  Indu Sah Foundation. ISF SMILE provides all possible
+                  treatments through a MOBILE DENTAL CLINIC — free of cost.
                 </p>
               </Block>
 
@@ -114,7 +113,7 @@ function ProjectsPage() {
                     "Fluoride application in children for caries prevention",
                     "Teaching toothbrushing techniques",
                     "Distribution of necessary medications",
-                    "Referral of the cases when needed",
+                    "Referral of cases when needed",
                   ]}
                 />
               </Block>
@@ -139,42 +138,6 @@ function ProjectsPage() {
                   Supervised by the president and members of the organization.
                 </p>
               </Block>
-
-              <Block heading="Why participate">
-                <BulletList
-                  items={[
-                    "Gain clinical experience",
-                    "Understand the situation of oral health in remote Nepal",
-                    "Have a glimpse of the plain region and Janaki Temple",
-                    "Help the needy people",
-                    "Prove yourself that you are there for your community",
-                  ]}
-                />
-              </Block>
-
-              <Block heading="What we look for in candidates">
-                <BulletList
-                  items={[
-                    "Confident enough to work independently",
-                    "Good and swift at extractions",
-                    "Swift at managing cases",
-                    "Great patient counseling skill",
-                    "Multilingual (Maithili preferred)",
-                    "Experience managing and conducting dental camps",
-                    "Can manage ART cases and knows Fluoride application",
-                  ]}
-                />
-              </Block>
-
-              <Block heading="When &amp; how">
-                <p>
-                  Started in May 2021 (delayed due to the nationwide COVID-19
-                  lockdown). All COVID-19 guidelines are strictly followed.
-                </p>
-                <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Questions about the project? Contact us by email.
-                </p>
-              </Block>
             </div>
           </div>
         </div>
@@ -185,11 +148,11 @@ function ProjectsPage() {
         <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-primary mb-3">
           Upcoming Projects
         </h2>
-        <h3 className="font-display text-3xl md:text-4xl font-extrabold tracking-tight mb-10 max-w-3xl text-balance">
-          What we plan to launch next.
+        <h3 className="font-display text-3xl md:text-4xl font-extrabold tracking-tight mb-12 max-w-3xl text-balance">
+          What we plan to launch <span className="pencil-underline">next</span>.
         </h3>
 
-        <div className="space-y-12">
+        <div className="grid gap-12 md:gap-16">
           <UpcomingCard
             num="01"
             title="Empowerment of underprivileged Children's Health Status and Education"
@@ -208,6 +171,7 @@ function ProjectsPage() {
             num="02"
             title="Empowerment of underprivileged Women's Health"
             img={womenImg}
+            flip
             items={[
               "Oral Health Awareness Programs",
               "Oral Hygiene Instruction Program",
@@ -255,21 +219,6 @@ function ProjectsPage() {
           />
         </div>
       </section>
-
-      {/* CTA — see articles */}
-      <section className="border-t border-border py-16 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="font-display text-3xl md:text-4xl font-extrabold tracking-tighter mb-6 text-balance">
-            See the work behind the projects.
-          </h2>
-          <Link
-            to="/stories"
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-7 py-4 font-mono text-[11px] uppercase tracking-[0.2em] hover:brightness-110 transition-all"
-          >
-            Letters from the foundation →
-          </Link>
-        </div>
-      </section>
     </SiteShell>
   );
 }
@@ -280,10 +229,12 @@ function ProjectHeading({
   label,
   title,
   img,
+  alt = false,
 }: {
   label: string;
   title: string;
   img: string;
+  alt?: boolean;
 }) {
   return (
     <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-end">
@@ -296,14 +247,12 @@ function ProjectHeading({
         </h2>
       </div>
       <div className="md:col-span-5">
-        <div className="aspect-[4/3] overflow-hidden">
-          <img
-            src={img}
-            alt={title}
-            loading="lazy"
-            className="w-full h-full object-cover"
-          />
-        </div>
+        <SketchImage
+          src={img}
+          alt={title}
+          variant={alt ? "alt" : "default"}
+          className="aspect-[4/3]"
+        />
       </div>
     </div>
   );
@@ -355,26 +304,36 @@ function UpcomingCard({
   img,
   items,
   subSections,
+  flip = false,
 }: {
   num: string;
   title: string;
   img: string;
   items?: string[];
   subSections?: { heading: string; items: string[] }[];
+  flip?: boolean;
 }) {
   return (
-    <article className="grid md:grid-cols-12 gap-6 md:gap-10 border border-border bg-card overflow-hidden">
-      <div className="md:col-span-4">
-        <div className="aspect-[4/3] md:h-full overflow-hidden">
-          <img
-            src={img}
-            alt={title}
-            loading="lazy"
-            className="w-full h-full object-cover"
-          />
-        </div>
+    <article className="border-2 border-ink pencil-shadow bg-card overflow-hidden grid md:grid-cols-12 gap-0">
+      <div
+        className={
+          "md:col-span-5 p-5 md:p-6 " +
+          (flip ? "md:order-2" : "md:order-1")
+        }
+      >
+        <SketchImage
+          src={img}
+          alt={title}
+          variant={flip ? "alt" : "default"}
+          className="aspect-[4/3] w-full"
+        />
       </div>
-      <div className="md:col-span-8 p-6 sm:p-8 md:py-10 md:pr-10">
+      <div
+        className={
+          "md:col-span-7 p-6 sm:p-8 md:py-10 md:px-10 min-w-0 " +
+          (flip ? "md:order-1" : "md:order-2")
+        }
+      >
         <span className="font-mono text-5xl md:text-6xl text-primary font-extrabold leading-none">
           {num}
         </span>
