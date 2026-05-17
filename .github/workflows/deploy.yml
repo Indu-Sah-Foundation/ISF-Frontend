@@ -36,6 +36,29 @@ jobs:
           fi
           npm run build
 
+      # TanStack Start's `spa: { enabled: true }` mode (set in
+      # vite.config.ts) prerenders the SPA shell as `_shell.html`.
+      # SWA expects `index.html`, so we rename. Also drop a SWA config
+      # that falls back to index.html for any unknown URL so client-side
+      # routing works for deep links like /stories/<slug>.
+      - name: Prepare dist for SWA
+        run: |
+          if [ ! -f dist/client/_shell.html ]; then
+            echo "::error::dist/client/_shell.html not found — vite SPA mode didn't run. Check vite.config.ts."
+            exit 1
+          fi
+          mv dist/client/_shell.html dist/client/index.html
+          cat > dist/client/staticwebapp.config.json <<'JSON'
+          {
+            "navigationFallback": {
+              "rewrite": "/index.html",
+              "exclude": ["/assets/*", "/certificates/*", "*.{png,jpg,jpeg,gif,svg,ico,webp,css,js,json,txt,xml}"]
+            }
+          }
+          JSON
+          echo "Prepared SWA artifact:"
+          ls -la dist/client/index.html dist/client/staticwebapp.config.json
+
       - name: Deploy to Azure Static Web Apps
         id: deploy
         uses: Azure/static-web-apps-deploy@v1
