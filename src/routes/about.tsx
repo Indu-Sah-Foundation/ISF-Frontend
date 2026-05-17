@@ -1,6 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { SiteShell } from "@/components/SiteShell";
 import { SketchImage } from "@/components/SketchImage";
+import { MediaCard } from "@/components/cards/MediaCard";
+import { PersonCard } from "@/components/cards/PersonCard";
+import { api, type TeamMember, type TeamKind } from "@/lib/api";
 import heroImg from "@/assets/program-women.jpg";
 import eduImg from "@/assets/program-education.jpg";
 import healthImg from "@/assets/program-health.jpg";
@@ -22,55 +26,20 @@ export const Route = createFileRoute("/about")({
   component: AboutPage,
 });
 
-const imagePool = [healthImg, eduImg, waterImg, roboticsImg, heroImg];
-const pickImg = (i: number) => imagePool[i % imagePool.length];
-
-const founders = [
-  {
-    name: "Lal Sah",
-    role: "Co-Founder · Lead Software Engineer, United States",
-    bio: "Lal Sah, Lead Software Engineer in the United States of America, shapes and approves foundation strategies, advocates for the foundation's issues, and sets the organization's overall direction.",
-  },
-  {
-    name: "Dr. Vijay Sah",
-    role: "Co-Founder · Executive Director · Dental Surgeon",
-    extras:
-      "Global Goodwill Ambassador · Global Peace Ambassador · Ambassador, Child Abuse Prevention for Nepal (Rotary International)",
-    bio: "Dr. Vijay Sah is a Dental Surgeon who practices research-based dentistry in Nepal. He believes that serving as a healthcare professional is the most honorable profession one can have, and dentistry is one of the best ways to bring a smile to your face. He leads the foundation's efforts to promote the Healthcare and Education of all the people under the poverty line in Nepal & around the world.",
-    motto: "Stay Humble!",
-  },
-  {
-    name: "Shubham Sah",
-    role: "President · CEO",
-    extras: "FTC Documentation Lead, Rotary Club of Waukee · Highschool Student",
-    bio: "Shubham Sah is a high school student who believes that helping others is a must. He has competed in and succeeded in global competitions like FIRST Tech Challenge, and FIRST Lego League. He leads and organizes educational projects like ISF Robotics.",
-  },
-];
-
-const advisoryIntl = [
-  { name: "Dr. Amit Saini", role: "Dental Surgeon, Punjab, India", extras: "Karmaveer Chakra, 2012 · Founder/President: Global Oral Health Foundation Society", bio: "" },
-  { name: "Dr. Arne Drews, MD", role: "Co-founder, NepalMed · Germany", bio: "Arne grew up in Germany and attained his medical degree at the University of Leipzig in 1997. Since 2008 he has run a private practice in respiratory and occupational medicine. In 2000 he co-founded NepalMed, supporting Nepalese activities in healthcare." },
-  { name: "Dr. Darren Weiss, BDS", role: "Head, Humble Smile Foundation", bio: "Darren grew up in Australia and attained his Bachelor of Dental Science from the University of Melbourne in 1989. Today he heads the Humble Smile Foundation, a non-profit organization committed to helping people in the most vulnerable areas of the world to care for themselves." },
-  { name: "Dr. Stephen Forrest, DDS", role: "Family, Cosmetic, and Implant Dentist", extras: "Berkshire Dental, Clive, IA, USA", bio: "" },
-];
-
-const advisoryNat = [
-  { name: "Dr. Pravin Shah", role: "Consultant Orthodontist, Nepal", bio: "" },
-];
-
-const board = [
-  { name: "Dr. Vijay Sah", role: "Current President" },
-  { name: "Mr. Ram Prakash Yadav", role: "Vice President" },
-  { name: "Mr. Mahendra Sah", role: "Secretary" },
-  { name: "Mrs. Rani Devi", role: "Deputy Secretary" },
-  { name: "Mr. Raj Sah", role: "Treasurer" },
-  { name: "Mr. Santosh Thakur", role: "Board Member" },
-  { name: "Mrs. Rina Devi", role: "Board Member" },
-  { name: "Mrs. Ram Sunar Devi (Dalit)", role: "Board Member · Underprivileged" },
-  { name: "Mr. Ram Pragash Yadav", role: "Board Member · Underprivileged" },
-];
+// Fallback portrait pool — used when a team member has no image_url set so
+// the cards still look complete during seeding.
+const fallbackImgs = [healthImg, eduImg, waterImg, roboticsImg, heroImg];
+const pickImg = (i: number) => fallbackImgs[i % fallbackImgs.length];
 
 function AboutPage() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["team", "public"],
+    queryFn: () => api.listTeam(),
+  });
+
+  const items = data?.items || [];
+  const byKind = (k: TeamKind) => items.filter((m) => m.kind === k);
+
   return (
     <SiteShell>
       <header className="px-6 pb-12 max-w-5xl mx-auto">
@@ -83,11 +52,15 @@ function AboutPage() {
       </header>
 
       <div className="px-6 max-w-7xl mx-auto">
+        {/* Hero — fixed tall height instead of an extreme aspect ratio so
+            the image is never letterboxed or weirdly cropped. */}
         <SketchImage
           src={heroImg}
           alt="Community in Nepal"
-          className="aspect-[21/9] w-full"
+          className="h-[22rem] sm:h-[28rem] md:h-[34rem] w-full"
           loading="eager"
+          fill
+          imgClassName="object-center"
         />
       </div>
 
@@ -128,44 +101,60 @@ function AboutPage() {
         </div>
       </section>
 
-      <PeopleSection eyebrow="Leadership" title="Founders" people={founders} />
-      <PeopleSection eyebrow="Advisory Board" title="International" people={advisoryIntl} tone="alt" />
-      <PeopleSection eyebrow="Advisory Board" title="National" people={advisoryNat} />
+      {isLoading && (
+        <p className="px-6 max-w-7xl mx-auto py-12 text-muted-foreground">
+          Loading team…
+        </p>
+      )}
+      {error && (
+        <p className="px-6 max-w-7xl mx-auto py-12 text-muted-foreground">
+          Couldn't load team: {(error as Error).message}
+        </p>
+      )}
 
-      {/* Board Members — 2 per row, with images */}
-      <section className="border-t border-border py-20 sm:py-24 px-6">
-        <div className="max-w-7xl mx-auto">
-          <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-primary mb-3 block">
-            Governance
-          </span>
-          <h2 className="font-display text-3xl md:text-5xl font-extrabold tracking-tight mb-12">
-            Board Members
-          </h2>
-          <div className="grid sm:grid-cols-2 gap-8 lg:gap-10">
-            {board.map((b, i) => (
-              <article
-                key={b.name + b.role}
-                className="sketch-border pencil-shadow bg-card overflow-hidden flex flex-col"
-              >
-                <SketchImage
-                  src={pickImg(i)}
-                  alt={b.name}
-                  variant={i % 2 === 0 ? "default" : "alt"}
-                  className="aspect-[16/10] w-full"
+      <PeopleSection
+        eyebrow="Leadership"
+        title="Founders"
+        people={byKind("founder")}
+      />
+      <PeopleSection
+        eyebrow="Advisory Board"
+        title="International"
+        people={byKind("advisor_intl")}
+        tone="alt"
+        imgOffset={2}
+      />
+      <PeopleSection
+        eyebrow="Advisory Board"
+        title="National"
+        people={byKind("advisor_nat")}
+      />
+
+      {/* Board Members — 2 per row using MediaCard */}
+      {byKind("board").length > 0 && (
+        <section className="border-t border-border py-20 sm:py-24 px-6">
+          <div className="max-w-7xl mx-auto">
+            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-primary mb-3 block">
+              Governance
+            </span>
+            <h2 className="font-display text-3xl md:text-5xl font-extrabold tracking-tight mb-12">
+              Board Members
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-8 lg:gap-10">
+              {byKind("board").map((b, i) => (
+                <MediaCard
+                  key={b.id}
+                  image={b.image_url || pickImg(i)}
+                  imageVariant={i % 2 === 0 ? "default" : "alt"}
+                  aspect="16/10"
+                  title={b.name}
+                  eyebrow={b.role}
                 />
-                <div className="p-6 sm:p-8">
-                  <h3 className="font-display text-xl sm:text-2xl font-extrabold tracking-tight">
-                    {b.name}
-                  </h3>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary mt-2">
-                    {b.role}
-                  </p>
-                </div>
-              </article>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </SiteShell>
   );
 }
@@ -175,12 +164,15 @@ function PeopleSection({
   title,
   people,
   tone = "default",
+  imgOffset = 0,
 }: {
   eyebrow: string;
   title: string;
-  people: { name: string; role: string; extras?: string; bio?: string; motto?: string }[];
+  people: TeamMember[];
   tone?: "default" | "alt";
+  imgOffset?: number;
 }) {
+  if (people.length === 0) return null;
   return (
     <section
       className={
@@ -200,42 +192,20 @@ function PeopleSection({
 
         <div className="space-y-10">
           {people.map((p, i) => (
-            <article
-              key={p.name}
-              className="sketch-border pencil-shadow bg-card overflow-hidden grid md:grid-cols-12 gap-0"
-            >
-              <div className="md:col-span-5">
-                <SketchImage
-                  src={pickImg(i + (tone === "alt" ? 2 : 0))}
-                  alt={p.name}
-                  variant={i % 2 === 0 ? "default" : "alt"}
-                  className="aspect-[4/3] md:aspect-auto md:h-full w-full"
-                />
-              </div>
-              <div className="md:col-span-7 p-6 sm:p-10">
-                <h3 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight">
-                  {p.name}
-                </h3>
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary mt-2 mb-2">
-                  {p.role}
-                </p>
-                {p.extras && (
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-4">
-                    {p.extras}
-                  </p>
-                )}
-                {p.bio && (
-                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    {p.bio}
-                  </p>
-                )}
-                {p.motto && (
-                  <p className="mt-4 font-display italic text-foreground">
-                    "{p.motto}"
-                  </p>
-                )}
-              </div>
-            </article>
+            <PersonCard
+              key={p.id}
+              image={p.image_url || pickImg(i + imgOffset)}
+              imageVariant={i % 2 === 0 ? "default" : "alt"}
+              title={p.name}
+              eyebrow={p.role}
+              extras={p.extras}
+              body={p.bio}
+              footer={
+                p.motto ? (
+                  <p className="font-display italic text-foreground">"{p.motto}"</p>
+                ) : undefined
+              }
+            />
           ))}
         </div>
       </div>

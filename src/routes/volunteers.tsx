@@ -1,13 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { SiteShell } from "@/components/SiteShell";
-import { SketchImage } from "@/components/SketchImage";
+import { MediaCard } from "@/components/cards/MediaCard";
+import { api, type Volunteer } from "@/lib/api";
 import healthImg from "@/assets/program-health.jpg";
 import eduImg from "@/assets/program-education.jpg";
 import waterImg from "@/assets/program-water.jpg";
 import roboticsImg from "@/assets/program-robotics.jpg";
 import womenImg from "@/assets/program-women.jpg";
 
-const teamImgs = [healthImg, eduImg, waterImg, roboticsImg, womenImg];
+// Fallback portrait pool used only when a volunteer row has no image_url set.
+const fallbackImgs = [healthImg, eduImg, waterImg, roboticsImg, womenImg];
 
 export const Route = createFileRoute("/volunteers")({
   head: () => ({
@@ -23,46 +26,17 @@ export const Route = createFileRoute("/volunteers")({
   component: VolunteersPage,
 });
 
-const team = [
-  {
-    name: "Mahesh",
-    bio: "Mahesh S. is leading the #ISFVolunteers team at Mahottari. He is a Health Assistant by profession and helps the organization know the problems of the remote village in detail so that the approach to solve them would be sustainable.",
-  },
-  {
-    name: "Rupesh",
-    bio: "Rupesh S. is another most proactive #ISFVolunteer. He loves to serve the community whenever needed. He has done certification in civil engineering and has a hobby to grow as a public speaker also. He is one of the most enthusiastic and optimistic team members.",
-  },
-  {
-    name: "Santosh",
-    bio: "Santosh R. is pursuing a Certification in Dentistry and possesses an extrovert personality. He is helping the organization in building at the local level. He loves to play cricket to stay fit. He radiates positive energy around him, which is his asset.",
-  },
-  {
-    name: "Pappu",
-    bio: "Pappu S. is one of the most vibrant #ISFVolunteers. He keeps smiling all the time that helps the team remain enthusiastic even in the most hectic schedule. He is pursuing a career in Pharmacy.",
-  },
-  {
-    name: "Nitesh",
-    bio: "Nitesh S. is one of the most hard-working #ISFVolunteers as he enjoys serving his community along with his studies. He has a dream to become prominent healthcare professional.",
-  },
-];
-
-const volunteerFields = [
-  "General health check-ups and treatment",
-  "Oral health check-ups and treatment",
-  "Oral Cancer Screening, Awareness and Education",
-  "Teaching at schools where we provide free education to underprivileged children",
-  "Mental Health Evaluation and Psychosocial Counselling",
-];
-
-const researchFields = [
-  "Research on Oral Health Status of Remote Nepal",
-  "Research program on Public Health Status of Remote Nepal",
-  "Research on the Educational status of Remote Nepal",
-  "Studies on Water and Sanitation of Remote Nepal",
-  "Research on Farming",
-];
-
 function VolunteersPage() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["volunteers", "public"],
+    queryFn: () => api.listVolunteers(),
+  });
+
+  const items = data?.items || [];
+  const team = items.filter((v) => v.kind === "team");
+  const volunteerFields = items.filter((v) => v.kind === "volunteer_field");
+  const researchFields = items.filter((v) => v.kind === "research_field");
+
   return (
     <SiteShell>
       <header className="px-6 pb-12 max-w-7xl mx-auto">
@@ -77,81 +51,59 @@ function VolunteersPage() {
         </h1>
       </header>
 
-      {/* Field team — sketch cards 2 per grid with images */}
-      <section className="px-6 max-w-7xl mx-auto pb-20 sm:pb-24">
-        <div className="grid sm:grid-cols-2 gap-8 lg:gap-10">
-          {team.map((p, i) => (
-            <article
-              key={p.name}
-              className="sketch-border pencil-shadow bg-card overflow-hidden flex flex-col"
-            >
-              <SketchImage
-                src={teamImgs[i % teamImgs.length]}
-                alt={p.name}
-                variant={i % 2 === 0 ? "default" : "alt"}
-                className="aspect-[16/10] w-full"
+      {isLoading && (
+        <p className="px-6 max-w-7xl mx-auto text-muted-foreground">Loading…</p>
+      )}
+      {error && (
+        <p className="px-6 max-w-7xl mx-auto text-muted-foreground">
+          Couldn't load volunteers: {(error as Error).message}
+        </p>
+      )}
+
+      {/* Field team cards — small, dense grid. 4 across on lg+, square
+          portrait tiles. Bio is intentionally compact here; full bios
+          live on each member's profile if we add detail pages later. */}
+      {team.length > 0 && (
+        <section className="px-6 max-w-7xl mx-auto pb-16 sm:pb-20">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-8">
+            {team.map((p, i) => (
+              <MediaCard
+                key={p.id}
+                image={p.image_url || fallbackImgs[i % fallbackImgs.length]}
+                imageVariant={i % 2 === 0 ? "default" : "alt"}
+                aspect="1/1"
+                title={p.name}
+                body={p.bio}
               />
-              <div className="p-6 sm:p-8">
-                <h3 className="font-display text-xl sm:text-2xl font-extrabold tracking-tight">
-                  {p.name}
-                </h3>
-                <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-                  {p.bio}
-                </p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* Volunteer / Research lists */}
-      <section className="border-t border-border bg-secondary/40 px-6 py-20 sm:py-24">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16">
-          <div>
-            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-primary">
-              A
-            </span>
-            <h2 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight mt-2 mb-6">
-              Volunteer with Indu Sah Foundation
-            </h2>
-            <p className="text-muted-foreground mb-6">
-              The field of Volunteering includes the following activities and more:
-            </p>
-            <ul className="space-y-3">
-              {volunteerFields.map((it) => (
-                <li
-                  key={it}
-                  className="font-display text-base sm:text-lg flex items-start gap-3"
-                >
-                  <span className="mt-2 size-1.5 rounded-full bg-primary shrink-0" />
-                  <span>{it}</span>
-                </li>
-              ))}
-            </ul>
+            ))}
           </div>
-          <div>
-            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-primary">
-              B
-            </span>
-            <h2 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight mt-2 mb-6">
-              Research with Indu Sah Foundation
-            </h2>
-            <ul className="space-y-3">
-              {researchFields.map((it) => (
-                <li
-                  key={it}
-                  className="font-display text-base sm:text-lg flex items-start gap-3"
-                >
-                  <span className="mt-2 size-1.5 rounded-full bg-primary shrink-0" />
-                  <span>{it}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* Combined CTA — kindly contact + ready to volunteer */}
+      {/* Volunteer / Research field lists */}
+      {(volunteerFields.length > 0 || researchFields.length > 0) && (
+        <section className="border-t border-border bg-secondary/40 px-6 py-20 sm:py-24">
+          <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16">
+            {volunteerFields.length > 0 && (
+              <FieldList
+                eyebrow="A"
+                heading="Volunteer with Indu Sah Foundation"
+                lede="The field of Volunteering includes the following activities and more:"
+                items={volunteerFields}
+              />
+            )}
+            {researchFields.length > 0 && (
+              <FieldList
+                eyebrow="B"
+                heading="Research with Indu Sah Foundation"
+                items={researchFields}
+              />
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* CTA */}
       <section className="border-t border-border py-20 sm:py-24 px-6">
         <div className="max-w-3xl mx-auto text-center space-y-6">
           <h2 className="font-display text-3xl md:text-5xl font-extrabold tracking-tighter text-balance">
@@ -174,5 +126,40 @@ function VolunteersPage() {
         </div>
       </section>
     </SiteShell>
+  );
+}
+
+function FieldList({
+  eyebrow,
+  heading,
+  lede,
+  items,
+}: {
+  eyebrow: string;
+  heading: string;
+  lede?: string;
+  items: Volunteer[];
+}) {
+  return (
+    <div>
+      <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-primary">
+        {eyebrow}
+      </span>
+      <h2 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight mt-2 mb-6">
+        {heading}
+      </h2>
+      {lede && <p className="text-muted-foreground mb-6">{lede}</p>}
+      <ul className="space-y-3">
+        {items.map((it) => (
+          <li
+            key={it.id}
+            className="font-display text-base sm:text-lg flex items-start gap-3"
+          >
+            <span className="mt-2 size-1.5 rounded-full bg-primary shrink-0" />
+            <span>{it.name}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

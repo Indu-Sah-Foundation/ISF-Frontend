@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/SiteShell";
-import { SketchImage } from "@/components/SketchImage";
+import { MediaTile } from "@/components/cards/MediaTile";
 import { api } from "@/lib/api";
 import heroImg from "@/assets/hero.jpg";
 import eduImg from "@/assets/program-education.jpg";
@@ -23,11 +23,8 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const programs = [
-  { num: "01", title: "ISF SMILE", desc: "Oral healthcare project educating and treating dental patients across underserved communities in Nepal — over 3,000 patients served free of cost.", img: healthImg },
-  { num: "02", title: "ISF Robotics", desc: "Hands-on robotics and engineering education to ignite curiosity, creativity, and STEM potential in children from impoverished communities.", img: roboticsImg },
-  { num: "03", title: "ISF EDC", desc: "Education and Child Abuse Prevention programs run in partnership with local schools across Mahottari and Province 2.", img: eduImg },
-];
+// Fallback program imagery used when a project row has no image_url yet.
+const programFallbacks = [healthImg, roboticsImg, eduImg];
 
 function HomePage() {
   const articles = useQuery({
@@ -35,6 +32,15 @@ function HomePage() {
     queryFn: () => api.listArticles(3, 0),
     retry: 1,
   });
+
+  // Pull current projects from the backend, same source as /events. We cap
+  // at 3 in the render so the home grid stays tidy.
+  const projects = useQuery({
+    queryKey: ["projects", "home"],
+    queryFn: () => api.listProjects({ kind: "current" }),
+    retry: 1,
+  });
+  const programs = (projects.data?.items || []).slice(0, 3);
 
   return (
     <SiteShell fullBleed>
@@ -52,7 +58,12 @@ function HomePage() {
           <span className="inline-block font-mono text-[11px] uppercase tracking-[0.25em] text-cream/80 mb-6 border border-cream/30 px-3 py-1.5">
             Loharpatti, Nepal
           </span>
-          <h1 className="font-display font-extrabold text-cream tracking-tighter leading-[0.95] mb-10 text-balance whitespace-normal text-[clamp(2.25rem,6.5vw,6rem)]">
+          {/* Hero headline — let it wrap naturally. The clamp caps font size
+              at 4.5rem so the full sentence fits on one line on lg+ screens
+              (~960px container at 4.5rem ≈ wraps after the period only).
+              On smaller screens it falls to two lines automatically.
+              `text-balance` makes the natural two-line wrap visually even. */}
+          <h1 className="font-display font-extrabold text-cream tracking-tighter leading-[0.95] mb-10 text-balance text-[clamp(2.25rem,5.5vw,4.5rem)]">
             For better <span className="pencil-underline">health</span>{" "}
             <span className="italic font-light">&amp;</span>{" "}
             <span className="pencil-underline">education</span>.
@@ -111,7 +122,7 @@ function HomePage() {
               Our Work
             </span>
             <h2 className="font-display text-4xl md:text-5xl font-extrabold tracking-tighter">
-              Active <span className="pencil-underline">programs</span>
+              Active <span className="pencil-underline">projects</span>
             </h2>
           </div>
           <Link
@@ -122,35 +133,46 @@ function HomePage() {
           </Link>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {programs.map((p, i) => (
-            <article
-              key={p.num}
-              className="flex flex-col"
-              style={{ animationDelay: `${i * 80}ms` }}
-            >
-              <SketchImage
-                src={p.img}
+        {projects.isLoading && (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="aspect-[4/5] bg-muted animate-pulse rounded" />
+            ))}
+          </div>
+        )}
+
+        {projects.isError && (
+          <p className="text-muted-foreground font-mono text-sm">
+            Programs are temporarily unavailable.
+          </p>
+        )}
+
+        {!projects.isLoading && programs.length === 0 && (
+          <p className="text-muted-foreground">
+            No current projects yet — check back soon.
+          </p>
+        )}
+
+        {programs.length > 0 && (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {programs.map((p, i) => (
+              <MediaTile
+                key={p.id}
+                image={p.image_url || programFallbacks[i % programFallbacks.length]}
                 alt={p.title}
-                variant={i % 2 === 0 ? "default" : "alt"}
-                className="aspect-[4/5]"
+                imageVariant={i % 2 === 0 ? "default" : "alt"}
+                aspect="4/5"
+                title={p.title}
+                caption={p.lede}
                 badge={
                   <span className="absolute top-4 left-4 font-mono text-5xl md:text-6xl text-cream/60 font-extrabold mix-blend-overlay">
-                    {p.num}
+                    {String(i + 1).padStart(2, "0")}
                   </span>
                 }
               />
-              <div className="pt-6">
-                <h3 className="font-display text-xl md:text-2xl font-extrabold mb-2 tracking-tight">
-                  {p.title}
-                </h3>
-                <p className="text-muted-foreground text-sm md:text-base">
-                  {p.desc}
-                </p>
-              </div>
-            </article>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
 
