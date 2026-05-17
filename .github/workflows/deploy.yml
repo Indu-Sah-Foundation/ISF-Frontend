@@ -1,3 +1,4 @@
+
 name: Deploy frontend
 
 on:
@@ -27,8 +28,13 @@ jobs:
 
       - name: Build
         env:
-          VITE_ISF_API: ${{ secrets.BACKEND_URL }}
-        run: npm run build
+          VITE_ISF_API: ${{ vars.VITE_ISF_API }}
+        run: |
+          if [ -z "$VITE_ISF_API" ]; then
+            echo "::error::VITE_ISF_API is not set. Add it as a GitHub Actions repo variable."
+            exit 1
+          fi
+          npm run build
 
       - name: Deploy to Azure Static Web Apps
         id: deploy
@@ -43,6 +49,7 @@ jobs:
           skip_app_build: true
           skip_api_build: true
 
+  # PR closed → tear down the per-PR preview environment SWA spun up.
   close_pr:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
@@ -52,4 +59,3 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           action: close
-
