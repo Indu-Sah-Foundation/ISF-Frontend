@@ -16,6 +16,7 @@ export const Route = createFileRoute("/donate/thanks")({
   }),
   component: ThanksPage,
 });
+ 
 
 function ThanksPage() {
   return (
