@@ -4,7 +4,7 @@ import { useState } from "react";
 import { SiteShell } from "@/components/SiteShell";
 import { api } from "@/lib/api";
 
-export const Route = createFileRoute("/donate")({
+export const Route = createFileRoute("/donate/")({
   head: () => ({
     meta: [
       { title: "Donate — Indu Sah Foundation" },

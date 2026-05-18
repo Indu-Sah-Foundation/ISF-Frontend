@@ -24,10 +24,11 @@ function ThanksPage() {
         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-8">
           <Heart className="w-10 h-10 text-primary" fill="currentColor" />
         </div>
-
-        <span className="font-mono text-primary text-xs uppercase tracking-[0.25em]">
-          Donation received
-        </span>
+        <div>
+          <span className="font-mono text-primary text-xs uppercase tracking-[0.25em]">
+            Donation received
+          </span>
+        </div>
         <h1 className="font-display text-5xl md:text-7xl font-extrabold tracking-tighter mt-4 text-balance">
           Thank <span className="pencil-underline">you</span>.
         </h1>
