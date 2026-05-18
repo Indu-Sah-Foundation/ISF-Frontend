@@ -207,6 +207,7 @@
 .gallery-tile {
   content-visibility: auto;
   contain-intrinsic-size: auto 600px;
+  padding: 12px;
 }
 
 /* Article prose */
