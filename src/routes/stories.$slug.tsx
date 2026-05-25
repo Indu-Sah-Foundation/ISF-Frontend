@@ -1,15 +1,11 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
-import { marked } from "marked";
 import { Languages, Loader2 } from "lucide-react";
 import { SiteShell } from "@/components/SiteShell";
 import { api, ApiError } from "@/lib/api";
 import { stripTagsComment } from "@/lib/tags";
-
-// Same marked config as the editor so the saved HTML/markdown renders the
-// same way readers see it.
-marked.use({ gfm: true, breaks: true });
+import { expandYouTubeEmbeds } from "@/lib/youtube";
 
 export const Route = createFileRoute("/stories/$slug")({
   component: StoryPage,
@@ -120,11 +116,6 @@ function StoryPage() {
   );
 }
 
-/** True if the body looks like HTML (from the WYSIWYG editor) vs raw markdown. */
-function looksLikeHTML(s: string): boolean {
-  return /<\w+[\s>]/.test(s);
-}
-
 /**
  * Drop the FIRST top-level image in an HTML body - it's already shown on
  * the blog list as the card thumbnail, so we don't repeat it at the top of
@@ -140,17 +131,13 @@ function stripFirstImage(html: string): string {
 }
 
 function StoryBody({ data }: { data: { title: string; body_md: string; published_at: string | null } }) {
+  // Every body is HTML (the WYSIWYG always saves HTML). Pass through
+  // directly so the image wrapper spans + float CSS work and text
+  // wraps around floated images. Then expand any YouTube links into
+  // embedded players.
   const stripped = stripTagsComment(data.body_md || "");
-
-  // HTML body (from the WYSIWYG): pass through directly so the image
-  // wrapper spans + float CSS work and text actually wraps around floated
-  // images. Running it through `marked.parse` re-wraps bare <img> tags in
-  // <p> which prevents the wrap behaviour.
-  //
-  // Legacy markdown bodies still parse via marked.
-  const isHTML = looksLikeHTML(stripped);
-  const cleaned = isHTML ? stripFirstImage(stripped) : stripped;
-  const html = isHTML ? cleaned : (marked.parse(cleaned) as string);
+  const cleaned = stripFirstImage(stripped);
+  const html = expandYouTubeEmbeds(cleaned);
 
   return (
     <>
@@ -232,13 +219,18 @@ function LanguagePicker({
 // new language can take several seconds - Azure cold-translate + DB save).
 // ---------------------------------------------------------------------------
 
-const LANG_LABELS: Record<string, string> = {
-  "": "English",
-  ne: "नेपाली · Nepali",
-};
+// Derive the loading-screen label from the same PRIMARY_LANGS array
+// that drives the picker, so adding/removing a language only requires
+// editing ONE place. Falls through to the raw code (or "the source
+// language" if empty) on the off-chance an unknown code slips in.
+function languageLabel(code: string): string {
+  if (!code) return "the source language";
+  const hit = PRIMARY_LANGS.find((l) => l.code === code);
+  return hit ? hit.label : code;
+}
 
 function TranslatingIntermediary({ lang }: { lang: string }) {
-  const label = LANG_LABELS[lang] || lang || "the source language";
+  const label = languageLabel(lang);
   return (
     <div className="px-6 py-24 max-w-3xl mx-auto text-center">
       <Loader2 className="w-10 h-10 mx-auto text-primary animate-spin mb-6" />
