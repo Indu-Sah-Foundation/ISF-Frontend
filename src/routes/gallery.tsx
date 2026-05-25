@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { SiteShell } from "@/components/SiteShell";
 import { MediaTile } from "@/components/cards/MediaTile";
 import { api, type GalleryItem, type GallerySize } from "@/lib/api";
+import { parseYouTubeId } from "@/lib/youtube";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -214,15 +215,33 @@ function GalleryPage() {
           >
             <X className="w-5 h-5" />
           </button>
-          <img
-            src={lightbox.src}
-            alt={lightbox.title || ""}
-            // Stop the click from bubbling to the backdrop and immediately
-            // closing the modal when the user actually wants to see the
-            // image at native size.
-            onClick={(e) => e.stopPropagation()}
-            className="max-h-full max-w-full object-contain cursor-zoom-out"
-          />
+          {(() => {
+            const ytId = parseYouTubeId(lightbox.src);
+            if (ytId) {
+              return (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-full max-w-5xl aspect-video"
+                >
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0`}
+                    title={lightbox.title || "YouTube video"}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full border-0"
+                  />
+                </div>
+              );
+            }
+            return (
+              <img
+                src={lightbox.src}
+                alt={lightbox.title || ""}
+                onClick={(e) => e.stopPropagation()}
+                className="max-h-full max-w-full object-contain cursor-zoom-out"
+              />
+            );
+          })()}
           {(lightbox.title || lightbox.caption) && (
             <div
               onClick={(e) => e.stopPropagation()}
