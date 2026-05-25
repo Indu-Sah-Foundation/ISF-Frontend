@@ -6,6 +6,7 @@ export function SiteShell({
   children,
   fullBleed = false,
   hideNav = false,
+  hideFooter = false,
 }: {
   children: React.ReactNode;
   /** Set true when the first child is a full-viewport hero (home page). */
@@ -13,6 +14,10 @@ export function SiteShell({
   /** Hide the top public nav entirely. Used on the blog detail page where
    *  a custom "← All blogs" link replaces it. */
   hideNav?: boolean;
+  /** Hide the global footer. Used on /contact where the page itself
+   *  already presents all the office / email info; rendering the footer
+   *  on top would duplicate the same content twice in one viewport. */
+  hideFooter?: boolean;
 }) {
   return (
     <div className="min-h-screen flex flex-col">
@@ -26,7 +31,7 @@ export function SiteShell({
       >
         {children}
       </main>
-      <Footer />
+      {!hideFooter && <Footer />}
     </div>
   );
 }
