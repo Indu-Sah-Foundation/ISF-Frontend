@@ -21,7 +21,7 @@ export function Logo({ compact = false }: { compact?: boolean }) {
     : "flex items-center group shrink-0 -mt-2";
 
   return (
-    <Link to="/" className={linkClass} aria-label="Indu Sah Foundation — home">
+    <Link to="/" className={linkClass} aria-label="Indu Sah Foundation - home">
       <img src={src} alt="Indu Sah Foundation" className={imgSize} />
     </Link>
   );
