@@ -36,7 +36,7 @@
 
 :root {
   --radius: 0.5rem;
-  /* ISF palette — ocean blue + sun yellow, drawn from the foundation logo */
+  /* ISF palette - ocean blue + sun yellow, drawn from the foundation logo */
   --background: oklch(0.99 0.005 240);
   --foreground: oklch(0.18 0.02 240);
   --ink: oklch(0.18 0.02 240);
@@ -45,7 +45,7 @@
   --card-foreground: oklch(0.18 0.02 240);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.02 240);
-  /* Deep ocean blue — matches the darker wave in the mark */
+  /* Deep ocean blue - matches the darker wave in the mark */
   --primary: oklch(0.45 0.13 235);
   --primary-foreground: oklch(0.99 0.005 240);
   --secondary: oklch(0.96 0.012 235);
@@ -171,7 +171,7 @@
 }
 .animate-reveal { animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
-/* Sketch image reveal — soft scale + fade so the pencil frame "draws in" */
+/* Sketch image reveal - soft scale + fade so the pencil frame "draws in" */
 @keyframes sketch-in {
   0%   { opacity: 0; transform: translateY(14px) scale(0.985) rotate(-0.25deg); }
   60%  { opacity: 1; }
@@ -200,6 +200,25 @@
 .sketch-frame--contained .sketch-corner--tr { top: 6px; right: 6px; }
 .sketch-frame--contained .sketch-corner--bl { bottom: 6px; left: 6px; }
 .sketch-frame--contained .sketch-corner--br { bottom: 6px; right: 6px; }
+
+/* Circular variant — the square-corner L-marks don't make sense on a
+   round avatar because there's no 90° corner to hug. Instead we drop
+   short tangent ticks at the four cardinal points (N / E / S / W),
+   the gesture an illustrator would use to annotate a compass-drawn
+   circle. */
+.sketch-tick {
+  position: absolute;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 8'><path d='M2 4 Q12 1 22 4' stroke='%23eab308' stroke-width='2.5' fill='none' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  width: 28px;
+  height: 8px;
+}
+.sketch-tick--n { top: -6px;    left: 50%; transform: translateX(-50%); }
+.sketch-tick--s { bottom: -6px; left: 50%; transform: translateX(-50%) scaleY(-1); }
+.sketch-tick--e { right: -16px; top: 50%;  transform: translateY(-50%) rotate(90deg); }
+.sketch-tick--w { left: -16px;  top: 50%;  transform: translateY(-50%) rotate(-90deg); }
 
 /* Page top spacing so the fixed nav never overlaps content */
 .page-top-pad { padding-top: clamp(10rem, 14vw, 14rem); }
@@ -235,7 +254,7 @@
 .prose-article pre { background: var(--color-ink); color: var(--color-cream); padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0; }
 .prose-article img { border-radius: 8px; margin: 1.5rem 0; max-width: 100%; height: auto; }
 
-/* TipTap editor — share prose-article styling so what you type IS what
+/* TipTap editor - share prose-article styling so what you type IS what
    readers see. Placeholder text + selected node treatment. */
 .rich-editor.ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
@@ -250,7 +269,7 @@
   outline-offset: 4px;
 }
 
-/* Rich images — wrapped in a positioned <span> so we can overlay a resize
+/* Rich images - wrapped in a positioned <span> so we can overlay a resize
    handle when the image is selected in the editor. Width comes inline (px)
    from the node attrs so what the editor shows is byte-identical to the
    saved HTML the public reader gets.
@@ -293,14 +312,14 @@
   border-radius: 8px;
 }
 /* Selection outline goes on the WRAPPER so it hugs the image bounds
-   exactly — putting it on the img double-painted with the wrapper and
+   exactly - putting it on the img double-painted with the wrapper and
    made it look like the box was bigger than the image. */
 .rich-img-wrapper.is-selected {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
-/* Resize handle — small filled square at a corner. Wide hit area for
+/* Resize handle - small filled square at a corner. Wide hit area for
    easy grabbing; mouse cursor switches to nwse/nesw resize. */
 .rich-img-handle {
   position: absolute;
@@ -323,7 +342,7 @@
   cursor: nesw-resize;
 }
 
-/* Floating align toolbar — appears just ABOVE the selected image with
+/* Floating align toolbar - appears just ABOVE the selected image with
    three buttons (left / center / right). Lives inside the wrapper so it
    positions relative to the image and moves with it. */
 .rich-img-floating-toolbar {
@@ -361,7 +380,7 @@
   color: var(--color-ink);
 }
 
-/* Live px readout while resizing — small chip pinned just below the image */
+/* Live px readout while resizing - small chip pinned just below the image */
 .rich-img-readout {
   position: absolute;
   bottom: -22px;
