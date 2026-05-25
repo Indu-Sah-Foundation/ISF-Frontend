@@ -59,7 +59,7 @@ export function ResizableImageView({
     selectThisNode();
 
     const startX = e.clientX;
-    // Use the saved attribute, NOT offsetWidth — offsetWidth can be a stale
+    // Use the saved attribute, NOT offsetWidth - offsetWidth can be a stale
     // value mid-React-render and was the source of the "snaps back to
     // original size" bug.
     const startWidth = numericWidth;
@@ -76,7 +76,7 @@ export function ResizableImageView({
     const onUp = () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup", onUp);
-      // Commit once on release — one transaction instead of one per pixel.
+      // Commit once on release - one transaction instead of one per pixel.
       setPreviewWidth((w) => {
         if (w != null) updateAttributes({ width: Math.round(w) });
         return null;
@@ -117,7 +117,7 @@ export function ResizableImageView({
       />
       {selected && editable && (
         <>
-          {/* Floating align toolbar — appears just above the selected image
+          {/* Floating align toolbar - appears just above the selected image
               so the admin doesn't have to scroll up to the main toolbar to
               reposition it. Left = float left (text wraps right),
               Center = block (no wrap), Right = float right (text wraps left). */}
@@ -132,7 +132,7 @@ export function ResizableImageView({
               type="button"
               className={"rich-img-align-btn " + (align === "left" ? "is-active" : "")}
               onClick={() => updateAttributes({ align: "left" })}
-              title="Float left — text wraps right"
+              title="Float left - text wraps right"
             >
               ⇤
             </button>
@@ -140,7 +140,7 @@ export function ResizableImageView({
               type="button"
               className={"rich-img-align-btn " + (align === "center" ? "is-active" : "")}
               onClick={() => updateAttributes({ align: "center" })}
-              title="Center — no text wrap"
+              title="Center - no text wrap"
             >
               ▭
             </button>
@@ -148,7 +148,7 @@ export function ResizableImageView({
               type="button"
               className={"rich-img-align-btn " + (align === "right" ? "is-active" : "")}
               onClick={() => updateAttributes({ align: "right" })}
-              title="Float right — text wraps left"
+              title="Float right - text wraps left"
             >
               ⇥
             </button>

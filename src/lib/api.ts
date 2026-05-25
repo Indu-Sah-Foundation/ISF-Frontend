@@ -43,7 +43,7 @@ export interface Paginated<T> {
 }
 
 // Lightweight wrapper for the new list endpoints (projects/achievements/
-// volunteers) that don't paginate — they return everything in one shot.
+// volunteers) that don't paginate - they return everything in one shot.
 export interface Listing<T> {
   items: T[];
   count: number;
@@ -129,6 +129,13 @@ export interface GalleryItem {
   updated_at: string;
 }
 
+export interface GalleryTag {
+  id: string;
+  name: string;
+  position: number;
+  created_at: string;
+}
+
 // ---------- Volunteers ----------
 export type VolunteerKind = "team" | "volunteer_field" | "research_field";
 
@@ -142,6 +149,16 @@ export interface Volunteer {
   published: boolean;
   created_at: string;
   updated_at: string;
+}
+
+// ---------- Contact messages ----------
+export interface ContactMessage {
+  id: string;
+  email: string;
+  message: string;
+  ip: string;
+  read: boolean;
+  created_at: string;
 }
 
 const TOKEN_KEY = "isf_admin_token";
@@ -238,6 +255,8 @@ export const api = {
     body_md: string;
     source_lang?: string;
     publish?: boolean;
+    /** ISO timestamp to backdate the post (only honored when publish=true). */
+    published_at?: string | null;
   }) =>
     req<Article>(`/articles`, {
       method: "POST",
@@ -247,7 +266,11 @@ export const api = {
 
   updateArticle: (
     id: string,
-    patch: Partial<Pick<Article, "title" | "body_md">> & { publish?: boolean },
+    patch: Partial<Pick<Article, "title" | "body_md">> & {
+      publish?: boolean;
+      /** ISO timestamp to re-date the post (only honored when publish=true). */
+      published_at?: string | null;
+    },
   ) =>
     req<Article>(`/articles/${encodeURIComponent(id)}`, {
       method: "PUT",
@@ -439,6 +462,23 @@ export const api = {
       admin: true,
     }),
 
+  // ---------- Gallery tags (admin-curated list of allowed tag names) ----------
+  listGalleryTags: () =>
+    req<Listing<GalleryTag>>(`/gallery/tags`),
+
+  createGalleryTag: (name: string, position = 0) =>
+    req<GalleryTag>(`/gallery/tags`, {
+      method: "POST",
+      admin: true,
+      body: JSON.stringify({ name, position }),
+    }),
+
+  deleteGalleryTag: (id: string) =>
+    req<void>(`/gallery/tags/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      admin: true,
+    }),
+
   // ---------- Blob cleanup (admin) ----------
   previewBlobCleanup: () =>
     req<{
@@ -491,6 +531,35 @@ export const api = {
 
   deleteVolunteer: (id: string) =>
     req<void>(`/volunteers/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      admin: true,
+    }),
+
+  // ---------- Contact messages ----------
+  sendContact: (input: { email: string; message: string }) =>
+    req<ContactMessage>(`/contacts`, {
+      method: "POST",
+      body: JSON.stringify(input),
+    }),
+
+  listContacts: (limit = 50, offset = 0) =>
+    req<Listing<ContactMessage>>(
+      `/contacts?limit=${limit}&offset=${offset}`,
+      { admin: true },
+    ),
+
+  unreadContactCount: () =>
+    req<{ unread: number }>(`/contacts/unread-count`, { admin: true }),
+
+  markContactRead: (id: string, read: boolean) =>
+    req<ContactMessage>(`/contacts/${encodeURIComponent(id)}`, {
+      method: "PUT",
+      admin: true,
+      body: JSON.stringify({ read }),
+    }),
+
+  deleteContact: (id: string) =>
+    req<void>(`/contacts/${encodeURIComponent(id)}`, {
       method: "DELETE",
       admin: true,
     }),
