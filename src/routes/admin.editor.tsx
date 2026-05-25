@@ -13,13 +13,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, UploadCloud } from "lucide-react";
 import {
-  ALL_TAGS,
-  readBodyTags,
   readThumbnail,
   stripTagsComment,
-  writeBodyTags,
   writeThumbnail,
-  type Tag,
 } from "@/lib/tags";
 
 interface SearchParams {
@@ -108,17 +104,14 @@ function Editor() {
     }));
   };
 
-  // Tags + thumbnail both ride as leading HTML comments inside body_md so
-  // we don't need a backend schema change. The RichEditor sees + writes
-  // only the post-comment HTML; we splice the comments back in on save.
-  const tags = useMemo(() => readBodyTags(article.body_md), [article.body_md]);
+  // Thumbnail rides as a leading HTML comment inside body_md so we don't
+  // need a backend schema change. The RichEditor sees + writes only the
+  // post-comment HTML; we splice the comment back in on save.
   const thumbnail = useMemo(
     () => readThumbnail(article.body_md) || "",
     [article.body_md],
   );
 
-  const setTags = (next: Tag[]) =>
-    setArticle((p) => ({ ...p, body_md: writeBodyTags(p.body_md, next) }));
   const setThumbnail = (url: string) =>
     setArticle((p) => ({
       ...p,
@@ -131,17 +124,17 @@ function Editor() {
     // populates `article.id`. Without the second dep, navigating away
     // and back to the same article re-rendered with the previous memo'd
     // value (empty string) and the RichEditor never picked up the
-    // freshly-loaded body — admin saw a blank editor on revisit.
+    // freshly-loaded body - admin saw a blank editor on revisit.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [articleId, article.id],
   );
 
   const handleEditorChange = (html: string) => {
-    // Splice both comments back in on every keystroke so they survive
-    // editor updates.
+    // Splice the thumbnail comment back in on every keystroke so it
+    // survives editor updates.
     setArticle((p) => ({
       ...p,
-      body_md: writeThumbnail(writeBodyTags(html, tags), thumbnail || null),
+      body_md: writeThumbnail(html, thumbnail || null),
     }));
   };
 
@@ -164,6 +157,7 @@ function Editor() {
           title: article.title,
           body_md: article.body_md,
           publish: isPublished,
+          published_at: article.published_at,
         });
         setSuccess("Blog updated");
       } else {
@@ -173,6 +167,7 @@ function Editor() {
           body_md: article.body_md,
           source_lang: article.source_lang || "en",
           publish: isPublished,
+          published_at: article.published_at,
         });
         setSuccess("Blog created");
         setTimeout(() => navigate({ to: "/admin/articles" }), 800);
@@ -279,46 +274,43 @@ function Editor() {
             </div>
           </div>
 
-          {/* Tags + thumbnail side by side on wide screens */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <Label className="mb-1.5 block">Tags</Label>
-              <div className="flex flex-wrap gap-1.5">
-                {ALL_TAGS.map((t) => {
-                  const active = tags.includes(t);
-                  return (
-                    <button
-                      key={t}
-                      type="button"
-                      onClick={() =>
-                        setTags(active ? tags.filter((x) => x !== t) : [...tags, t])
-                      }
-                      className={
-                        "font-mono text-[10px] uppercase tracking-[0.18em] px-2.5 py-1.5 border-2 transition-colors " +
-                        (active
-                          ? "border-ink bg-ink text-cream"
-                          : "border-ink/40 text-muted-foreground hover:border-ink hover:text-foreground")
-                      }
-                    >
-                      {t}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Thumbnail: the cover image shown on the /stories list card.
-                Optional — if blank, the public card falls back to the first
-                image found inside the body. */}
-            <ImageUploadField
-              value={thumbnail}
-              onChange={setThumbnail}
-              label="Blog card thumbnail (optional — defaults to first image in body)"
-              height="h-32"
+          {/* Publish date - leave blank to use the current moment. Set to
+              an older date when migrating historical posts so they sort
+              correctly on the public /stories list. Only takes effect when
+              "Publish" is toggled on. */}
+          <div>
+            <Label htmlFor="publish-date">Publish date</Label>
+            <Input
+              id="publish-date"
+              type="date"
+              value={article.published_at ? article.published_at.slice(0, 10) : ""}
+              onChange={(e) =>
+                setArticle((p) => ({
+                  ...p,
+                  published_at: e.target.value
+                    ? new Date(e.target.value + "T12:00:00Z").toISOString()
+                    : null,
+                }))
+              }
+              disabled={isSaving}
+              className="mt-1.5 w-48 font-mono"
             />
+            <p className="text-xs text-muted-foreground mt-1">
+              Leave blank to use today. Backdate older posts here.
+            </p>
           </div>
 
-          {/* Single-pane WYSIWYG — what you type is what readers see */}
+          {/* Thumbnail: the cover image shown on the /stories list card.
+              Optional - if blank, the public card falls back to the first
+              image found inside the body. */}
+          <ImageUploadField
+            value={thumbnail}
+            onChange={setThumbnail}
+            label="Blog card thumbnail (optional - defaults to first image in body)"
+            height="h-32"
+          />
+
+          {/* Single-pane WYSIWYG - what you type is what readers see */}
           <div>
             <Label className="mb-1.5 block">Content</Label>
             <RichEditor
