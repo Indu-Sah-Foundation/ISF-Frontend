@@ -59,7 +59,7 @@ function AdminAchievementsPage() {
 
         {data && data.items.length === 0 && (
           <p className="text-muted-foreground">
-            No achievements yet — click "Add achievement" to create one.
+            No achievements yet - click "Add achievement" to create one.
           </p>
         )}
 
