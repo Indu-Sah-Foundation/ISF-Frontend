@@ -7,7 +7,7 @@ import { api } from "@/lib/api";
 export const Route = createFileRoute("/donate/")({
   head: () => ({
     meta: [
-      { title: "Donate — Indu Sah Foundation" },
+      { title: "Donate - Indu Sah Foundation" },
       {
         name: "description",
         content:
@@ -63,7 +63,7 @@ function DonatePage() {
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
           100% goes to programs in Nepal. Donations are processed securely via
-          Stripe — you'll be redirected to a hosted checkout.
+          Stripe - you'll be redirected to a hosted checkout.
         </p>
       </header>
 
