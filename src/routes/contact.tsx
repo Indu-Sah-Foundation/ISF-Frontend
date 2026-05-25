@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { SiteShell } from "@/components/SiteShell";
-import { api } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -34,18 +34,28 @@ function ContactPage() {
       setSent(true);
       setEmail("");
       setMessage("");
-    } catch (err: any) {
-      setError(
-        err?.message ||
+    } catch (err: unknown) {
+      // 404 = endpoint not deployed yet, or the backend doesn't know
+      // about /contacts. Give a clearer note than the generic "we
+      // couldn't find what you were looking for" copy.
+      if (err instanceof ApiError && err.status === 404) {
+        setError(
+          "Our message form is temporarily unavailable. Please email indusahfoundation@gmail.com directly.",
+        );
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(
           "Something went wrong sending your message. Please try again.",
-      );
+        );
+      }
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <SiteShell>
+    <SiteShell hideFooter>
       <header className="px-6 pt-20 pb-12 max-w-7xl mx-auto">
         <span className="font-mono text-primary text-xs uppercase tracking-[0.2em]">
           Contact
