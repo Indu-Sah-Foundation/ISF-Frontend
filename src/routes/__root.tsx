@@ -72,21 +72,29 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Indu Sah Foundation — For Better Health & Education" },
+      { title: "Indu Sah Foundation - For Better Health & Education" },
       { name: "description", content: "Indu Sah Foundation is a non-profit working in Nepal for the health, education and dignity of underprivileged children." },
       { name: "author", content: "Indu Sah Foundation" },
-      { property: "og:title", content: "Indu Sah Foundation — For Better Health & Education" },
+      { property: "og:title", content: "Indu Sah Foundation - For Better Health & Education" },
       { property: "og:description", content: "Indu Sah Foundation is a non-profit working in Nepal for the health, education and dignity of underprivileged children." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Indu Sah Foundation — For Better Health & Education" },
+      { name: "twitter:title", content: "Indu Sah Foundation - For Better Health & Education" },
       { name: "twitter:description", content: "Indu Sah Foundation is a non-profit working in Nepal for the health, education and dignity of underprivileged children." },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
+      },
+      // Optimization: Open the TLS handshake to the API on first paint so the very
+      // first /articles fetch (or any data call) doesn't pay DNS + TLS
+      // round-trips serially after JS executes.
+      {
+        rel: "preconnect",
+        href: import.meta.env.VITE_ISF_API,
+        crossOrigin: "anonymous",
       },
     ],
   }),
