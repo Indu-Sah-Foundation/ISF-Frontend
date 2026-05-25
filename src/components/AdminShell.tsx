@@ -9,6 +9,7 @@ import {
   Award,
   Users,
   UserSquare2,
+  Mail,
 } from "lucide-react";
 import { auth, type AdminUser } from "@/lib/api";
 import { Logo } from "./Logo";
@@ -21,10 +22,11 @@ const links = [
   { to: "/admin/team", label: "Team", icon: UserSquare2, exact: false },
   { to: "/admin/volunteers", label: "Volunteers", icon: Users, exact: false },
   { to: "/admin/gallery", label: "Gallery", icon: ImageIcon, exact: false },
+  { to: "/admin/contacts", label: "Messages", icon: Mail, exact: false },
 ] as const;
 
 /**
- * Admin chrome — used by every admin route INSTEAD of <SiteShell>.
+ * Admin chrome - used by every admin route INSTEAD of <SiteShell>.
  *
  *  - No donor-facing public nav.
  *  - Handles the auth check + redirect once (so individual pages don't repeat
@@ -69,7 +71,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <nav className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur-md border-b-2 border-ink">
-        {/* Row 1 — Logo + "Admin" label + user/signout. Always single line. */}
+        {/* Row 1 - Logo + "Admin" label + user/signout. Always single line. */}
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10 h-16 sm:h-20 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4 sm:gap-6 min-w-0">
             <Logo compact />
@@ -93,7 +95,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           </div>
         </div>
 
-        {/* Row 2 — admin tabs. Same on every viewport; scrolls horizontally
+        {/* Row 2 - admin tabs. Same on every viewport; scrolls horizontally
             on narrow screens. Moved into its own row so 7 tabs + logo +
             user email never collide in the same bar. */}
         <div className="border-t border-ink/30 bg-cream/40">
