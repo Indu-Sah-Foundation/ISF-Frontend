@@ -90,7 +90,7 @@ function AdminPage() {
 }
 
 // ---------------------------------------------------------------------------
-// BlobCleanupCard — scans Azure Blob for images that no DB row references
+// BlobCleanupCard - scans Azure Blob for images that no DB row references
 // anymore (deleted articles, removed gallery items, replaced project /
 // achievement / team / volunteer photos) and deletes them. Preview first,
 // confirm, then delete.
@@ -153,7 +153,7 @@ function BlobCleanupCard() {
         <p className="text-sm text-muted-foreground">
           Find and delete images sitting in Azure Blob that no longer
           appear in any blog body, gallery item, project, achievement,
-          team member, or volunteer record. Preview first — nothing is
+          team member, or volunteer record. Preview first - nothing is
           deleted until you confirm.
         </p>
 
