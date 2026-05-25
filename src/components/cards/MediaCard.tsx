@@ -1,7 +1,7 @@
 import { SketchImage } from "@/components/SketchImage";
 
 /**
- * Vertical stacked card — image on top inside a sketch frame, text content
+ * Vertical stacked card - image on top inside a sketch frame, text content
  * below in a cream panel with a clear border. Used for:
  *   - About → Board members
  *   - Volunteers → field team
@@ -17,6 +17,9 @@ import { SketchImage } from "@/components/SketchImage";
  *   └──────────────────────┘
  */
 interface Props {
+  /** Image URL. Pass an empty string to render no image at all (the card
+   *  collapses to title-and-body only — used for board members and
+   *  volunteers who haven't uploaded a photo yet). */
   image: string;
   imageVariant?: "default" | "alt";
   aspect?: "4/5" | "4/3" | "16/10" | "1/1";
@@ -26,6 +29,11 @@ interface Props {
   footer?: React.ReactNode;
   /** Overlay rendered inside the image frame. */
   badge?: React.ReactNode;
+  /** Portrait mode: skip the sketch frame and render the photo as a
+   *  clean round avatar. Use for volunteers / team members so a
+   *  pre-cropped circular headshot reads as deliberate rather than
+   *  a misaligned upload inside a square frame. */
+  circular?: boolean;
 }
 
 const aspectClass: Record<NonNullable<Props["aspect"]>, string> = {
@@ -44,23 +52,43 @@ export function MediaCard({
   body,
   footer,
   badge,
+  circular = false,
 }: Props) {
   return (
-    // No outer card border — the SketchImage's frame is the only border on
-    // the card, matching the new PersonCard / blog row style. Avoids the
-    // bg-card gap between two competing sketch borders that used to show
-    // up as "white leak".
-    <article className="flex flex-col h-full">
-      <SketchImage
-        src={image}
-        alt={title}
-        variant={imageVariant}
-        className={`${aspectClass[aspect]} w-full`}
-        badge={badge}
-        fill
-        imgClassName="object-center"
-      />
-      <div className="pt-4 sm:pt-5 flex flex-col flex-1">
+    // No outer card border. In default mode the SketchImage's frame is the
+    // only border on the card; in circular mode the round avatar replaces
+    // the frame entirely so pre-cropped portraits read clean.
+    <article className="flex flex-col h-full items-center text-center">
+      {/* No image_url? Render nothing — better than a stock photo or
+          gray placeholder for board members / volunteers who haven't
+          uploaded a portrait yet. */}
+      {image && (circular ? (
+        // Clean round avatar — no pencil corners. The square L-marks
+        // don't fit a circle's shape, and the cardinal-tick alternative
+        // read as too busy, so portraits render bare.
+        <div className="relative w-full max-w-[220px] aspect-square">
+          <div className="absolute inset-0 overflow-hidden rounded-full bg-muted">
+            <img
+              src={image}
+              alt={title}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            {badge && <div className="absolute inset-0">{badge}</div>}
+          </div>
+        </div>
+      ) : (
+        <SketchImage
+          src={image}
+          alt={title}
+          variant={imageVariant}
+          className={`${aspectClass[aspect]} w-full`}
+          badge={badge}
+          fill
+          imgClassName="object-center"
+        />
+      ))}
+      <div className={`pt-4 sm:pt-5 flex flex-col flex-1 ${circular ? "items-center" : ""}`}>
         {eyebrow && (
           <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-primary mb-1.5">
             {eyebrow}
