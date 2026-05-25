@@ -15,7 +15,7 @@ const fallbackImgs = [healthImg, eduImg, waterImg, roboticsImg, womenImg];
 export const Route = createFileRoute("/volunteers")({
   head: () => ({
     meta: [
-      { title: "ISF Volunteers — Indu Sah Foundation" },
+      { title: "ISF Volunteers - Indu Sah Foundation" },
       {
         name: "description",
         content:
@@ -39,13 +39,13 @@ function VolunteersPage() {
 
   return (
     <SiteShell>
-      <header className="px-6 pb-12 max-w-7xl mx-auto">
+      <header className="px-5 sm:px-6 pb-8 sm:pb-12 max-w-7xl mx-auto">
         <span className="font-mono text-primary text-xs uppercase tracking-[0.2em]">
           ISF Volunteers
         </span>
-        <h1 className="font-display text-5xl md:text-7xl font-extrabold tracking-tighter mt-4 text-balance max-w-4xl">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tighter mt-3 sm:mt-4 text-balance max-w-4xl">
           Indu Sah Foundation <span className="pencil-underline">Volunteers</span>
-          <span className="block text-primary mt-3 text-2xl sm:text-3xl md:text-4xl tracking-tight">
+          <span className="block text-primary mt-2 sm:mt-3 text-xl sm:text-2xl md:text-4xl tracking-tight">
             #ISFVolunteers
           </span>
         </h1>
@@ -60,7 +60,7 @@ function VolunteersPage() {
         </p>
       )}
 
-      {/* Field team cards — small, dense grid. 4 across on lg+, square
+      {/* Field team cards - small, dense grid. 4 across on lg+, square
           portrait tiles. Bio is intentionally compact here; full bios
           live on each member's profile if we add detail pages later. */}
       {team.length > 0 && (
@@ -69,11 +69,12 @@ function VolunteersPage() {
             {team.map((p, i) => (
               <MediaCard
                 key={p.id}
-                image={p.image_url || fallbackImgs[i % fallbackImgs.length]}
+                image={p.image_url || ""}
                 imageVariant={i % 2 === 0 ? "default" : "alt"}
                 aspect="1/1"
                 title={p.name}
                 body={p.bio}
+                circular
               />
             ))}
           </div>
