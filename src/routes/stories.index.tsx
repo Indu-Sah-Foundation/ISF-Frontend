@@ -1,6 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { SiteShell } from "@/components/SiteShell";
 import { PersonCard } from "@/components/cards/PersonCard";
 import { api, type Article } from "@/lib/api";
@@ -24,6 +23,11 @@ export const Route = createFileRoute("/stories/")({
       },
     ],
   }),
+
+  validateSearch: (search: Record<string, any>): { page: number } => {
+    const p = Number(search.page);
+    return { page: Number.isFinite(p) && p >= 1 ? Math.floor(p) : 1 };
+  },
   component: StoriesPage,
 });
 
@@ -103,7 +107,11 @@ function BlogRow({ article, idx }: { article: Article; idx: number }) {
 const PAGE_SIZE = 10;
 
 function StoriesPage() {
-  const [page, setPage] = useState(1);
+  const { page } = useSearch({ from: "/stories/" });
+  const navigate = useNavigate({ from: "/stories/" });
+  const setPage = (next: number) =>
+    navigate({ search: { page: Math.max(1, next) } });
+
   const offset = (page - 1) * PAGE_SIZE;
 
   const { data, isLoading, isError, isFetching } = useQuery({
@@ -171,7 +179,7 @@ function StoriesPage() {
           <div className="flex items-center justify-between gap-4 pt-8 border-t-2 border-ink/20">
             <button
               type="button"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              onClick={() => setPage(page - 1)}
               disabled={!hasPrev || isFetching}
               className="font-mono text-[11px] uppercase tracking-[0.2em] px-4 py-2 border-2 border-ink/40 hover:border-ink hover:text-foreground text-muted-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-ink/40"
             >
@@ -182,7 +190,7 @@ function StoriesPage() {
             </span>
             <button
               type="button"
-              onClick={() => setPage((p) => p + 1)}
+              onClick={() => setPage(page + 1)}
               disabled={!hasNext || isFetching}
               className="font-mono text-[11px] uppercase tracking-[0.2em] px-4 py-2 border-2 border-ink/40 hover:border-ink hover:text-foreground text-muted-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-ink/40"
             >
