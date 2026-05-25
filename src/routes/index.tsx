@@ -102,14 +102,14 @@ function HomePage() {
           </span>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 justify-items-center">
             {[
-              { v: "3,000+", l: "Dental Patients Served" },
-              { v: "6+", l: "Years on the Ground" },
+              { v: "7,000+", l: "Patients · Families · Children" },
+              { v: "4", l: "Districts Across Nepal" },
             ].map((s) => (
-              <div key={s.l} className="space-y-2 text-center">
+              <div key={s.l} className="space-y-2 text-center max-w-xs">
                 <div className="font-display text-6xl md:text-7xl font-extrabold tracking-tighter">
                   {s.v}
                 </div>
-                <div className="font-mono text-[11px] uppercase text-muted-foreground tracking-[0.18em]">
+                <div className="font-mono text-[11px] uppercase text-muted-foreground tracking-[0.18em] text-balance">
                   {s.l}
                 </div>
               </div>
@@ -339,11 +339,11 @@ function HomePage() {
       <section className="bg-primary text-primary-foreground py-24 md:py-32">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <h2 className="font-display text-5xl md:text-7xl font-extrabold tracking-tighter mb-8 text-balance">
-            Every child deserves a healthy start.
+            Fund the next camp.
           </h2>
           <p className="text-lg md:text-xl text-primary-foreground/85 max-w-xl mx-auto mb-12">
-            Your support builds clinics, fills classrooms, and keeps the next
-            generation of Nepal in school.
+            Every donation funds the next camp, classroom, or relief drive,
+            wherever the need is greatest across Nepal.
           </p>
           <Link
             to="/donate"
