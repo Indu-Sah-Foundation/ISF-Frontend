@@ -628,14 +628,29 @@ export const api = {
     }),
 
   uploadToBlob: async (file: File, uploadURL: string): Promise<void> => {
-    const res = await fetch(uploadURL, {
-      method: "PUT",
-      headers: {
-        "x-ms-blob-type": "BlockBlob",
-        "Content-Type": file.type,
-      },
-      body: file,
-    });
-    if (!res.ok) throw new Error(`Upload failed: ${res.status} ${res.statusText}`);
+    let res: Response;
+    try {
+      res = await fetch(uploadURL, {
+        method: "PUT",
+        headers: {
+          "x-ms-blob-type": "BlockBlob",
+          "Content-Type": file.type,
+        },
+        body: file,
+      });
+    } catch {
+      throw new Error(
+        "Couldn't reach Azure Blob storage. The storage account's CORS rules may need to allow PUT from this site.",
+      );
+    }
+    if (!res.ok) {
+      const reason =
+        res.status === 403
+          ? "The upload signature was rejected (expired or invalid)."
+          : res.status === 413
+            ? "That image is too large."
+            : `Azure Blob returned ${res.status}.`;
+      throw new Error(`Image upload failed. ${reason}`);
+    }
   },
 };
