@@ -7,7 +7,7 @@ import { api, type Achievement } from "@/lib/api";
 export const Route = createFileRoute("/achievements")({
   head: () => ({
     meta: [
-      { title: "Achievements — Indu Sah Foundation" },
+      { title: "Achievements - Indu Sah Foundation" },
       {
         name: "description",
         content:
@@ -28,12 +28,12 @@ function AchievementsPage() {
 
   return (
     <SiteShell>
-      <header className="px-6 pt-16 pb-12 max-w-7xl mx-auto">
+      <header className="px-5 sm:px-6 pt-10 sm:pt-16 pb-8 sm:pb-12 max-w-7xl mx-auto">
         <span className="font-mono text-primary text-xs uppercase tracking-[0.2em]">
           Achievements
         </span>
-        <h1 className="font-display text-5xl md:text-7xl font-extrabold tracking-tighter mt-4 text-balance max-w-4xl">
-          Recognized by the communities we serve.
+        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tighter mt-3 sm:mt-4 text-balance max-w-4xl">
+          <span className="pencil-underline">Recognized</span> by the communities we serve.
         </h1>
       </header>
 
@@ -46,7 +46,7 @@ function AchievementsPage() {
         )}
         {!isLoading && items.length === 0 && (
           <p className="text-muted-foreground">
-            No achievements published yet — check back soon.
+            No achievements published yet - check back soon.
           </p>
         )}
 
@@ -86,7 +86,7 @@ function AchievementsPage() {
 function CertificateCard({ achievement: a }: { achievement: Achievement }) {
   return (
     <article className="flex flex-col">
-      {/* "Sketchbook" frame for the certificate — offset accent + cream background */}
+      {/* "Sketchbook" frame for the certificate - offset accent + cream background */}
       <div className="relative">
         <div
           aria-hidden
@@ -96,7 +96,7 @@ function CertificateCard({ achievement: a }: { achievement: Achievement }) {
           {a.image_url ? (
             <img
               src={a.image_url}
-              alt={`${a.title} — ${a.organization}`}
+              alt={`${a.title} - ${a.organization}`}
               loading="lazy"
               className="w-full h-full object-contain p-3"
             />
