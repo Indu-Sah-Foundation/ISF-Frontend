@@ -98,7 +98,12 @@ export function MediaCard({
           {title}
         </h3>
         {body && (
-          <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-snug flex-1 line-clamp-4">
+          <p
+            className={
+              "mt-2 text-xs sm:text-sm text-muted-foreground leading-snug flex-1 " +
+              (circular ? "" : "line-clamp-4")
+            }
+          >
             {body}
           </p>
         )}
