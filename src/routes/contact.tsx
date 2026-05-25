@@ -2,15 +2,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { SiteShell } from "@/components/SiteShell";
+import { api } from "@/lib/api";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — Indu Sah Foundation" },
+      { title: "Contact - Indu Sah Foundation" },
       {
         name: "description",
         content:
-          "Get in touch with Indu Sah Foundation — partnerships, press, and program inquiries.",
+          "Get in touch with Indu Sah Foundation - partnerships, press, and program inquiries.",
       },
     ],
   }),
@@ -21,6 +22,27 @@ function ContactPage() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSubmitting(true);
+    try {
+      await api.sendContact({ email, message });
+      setSent(true);
+      setEmail("");
+      setMessage("");
+    } catch (err: any) {
+      setError(
+        err?.message ||
+          "Something went wrong sending your message. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <SiteShell>
@@ -97,14 +119,12 @@ function ContactPage() {
               </p>
             </div>
           ) : (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                // TODO: wire to backend mailing-list endpoint when available
-                setSent(true);
-              }}
-              className="space-y-6"
-            >
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <div className="border border-destructive/40 bg-destructive/5 text-destructive text-sm px-4 py-3 font-mono">
+                  {error}
+                </div>
+              )}
               <div>
                 <label
                   htmlFor="email"
@@ -139,9 +159,10 @@ function ContactPage() {
               </div>
               <button
                 type="submit"
-                className="bg-primary text-primary-foreground px-8 py-4 font-display font-extrabold uppercase tracking-[0.2em] text-xs hover:brightness-110 transition-all"
+                disabled={submitting}
+                className="bg-primary text-primary-foreground px-8 py-4 font-display font-extrabold uppercase tracking-[0.2em] text-xs hover:brightness-110 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Send message
+                {submitting ? "Sending…" : "Send message"}
               </button>
             </form>
           )}
