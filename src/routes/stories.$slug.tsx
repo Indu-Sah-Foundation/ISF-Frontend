@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { marked } from "marked";
 import { Languages, Loader2 } from "lucide-react";
 import { SiteShell } from "@/components/SiteShell";
-import { api } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 import { stripTagsComment } from "@/lib/tags";
 
 // Same marked config as the editor so the saved HTML/markdown renders the
@@ -53,7 +53,10 @@ function StoryPage() {
       try {
         return await api.getArticle(slug, lang || undefined);
       } catch (e: any) {
-        if (String(e?.message).startsWith("404")) throw notFound();
+        // Detect a real 404 via the typed ApiError status rather than
+        // string-matching the message (the message is now user-friendly
+        // copy like "We couldn't find what you were looking for.").
+        if (e instanceof ApiError && e.status === 404) throw notFound();
         throw e;
       }
     },
