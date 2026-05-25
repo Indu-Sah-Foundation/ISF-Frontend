@@ -1,5 +1,6 @@
 import { SketchImage } from "@/components/SketchImage";
 import { cn } from "@/lib/utils";
+import { parseYouTubeId } from "@/lib/youtube";
 
 /**
  * Minimal image-first tile used on Home programs and the Gallery grid.
@@ -55,14 +56,37 @@ export function MediaTile({
   badge,
   className,
 }: Props) {
+
+  const ytId = parseYouTubeId(image);
+  const previewSrc = ytId
+    ? `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`
+    : image;
+
   return (
     <figure className={cn("flex flex-col", className)}>
       <SketchImage
-        src={image}
+        src={previewSrc}
         alt={alt ?? title ?? ""}
         variant={imageVariant}
         className={`${aspectClass[aspect]} w-full`}
-        badge={badge}
+        badge={
+          ytId ? (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-ink/80 backdrop-blur-sm flex items-center justify-center">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="white"
+                  className="w-7 h-7 sm:w-8 sm:h-8 translate-x-0.5"
+                  aria-hidden
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </div>
+          ) : (
+            badge
+          )
+        }
         fill
         imgClassName="object-center"
       />
