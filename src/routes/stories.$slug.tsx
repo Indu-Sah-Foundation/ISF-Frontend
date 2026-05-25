@@ -5,7 +5,7 @@ import { marked } from "marked";
 import { Languages, Loader2 } from "lucide-react";
 import { SiteShell } from "@/components/SiteShell";
 import { api } from "@/lib/api";
-import { stripTagsComment, tagsForArticle } from "@/lib/tags";
+import { stripTagsComment } from "@/lib/tags";
 
 // Same marked config as the editor so the saved HTML/markdown renders the
 // same way readers see it.
@@ -36,15 +36,13 @@ const LANG_KEY = "isf_blog_lang";
 
 function StoryPage() {
   const { slug } = Route.useParams();
-  const [lang, setLang] = useState<string>(() =>
-    typeof window === "undefined" ? "" : window.localStorage.getItem(LANG_KEY) || "",
-  );
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (lang) window.localStorage.setItem(LANG_KEY, lang);
-    else window.localStorage.removeItem(LANG_KEY);
-  }, [lang]);
+  // Every article opens in English on first click. The reader can switch
+  // to another language via the picker, but that choice is per-tab and
+  // does NOT persist to localStorage — opening a different article (or
+  // re-opening this one) starts fresh in English again. This avoids the
+  // confusing case where a reader who once tried Nepali sees every
+  // future article auto-translated.
+  const [lang, setLang] = useState<string>("");
 
   const { data, isLoading, isFetching, error } = useQuery({
     // Keyed by (slug, lang) so switching language triggers a refetch. The
@@ -64,7 +62,7 @@ function StoryPage() {
 
   // Track which language is CURRENTLY rendered. When the user picks a
   // new language, React Query keeps the previous data on screen during
-  // the refetch — and for the first frame after the new data lands,
+  // the refetch - and for the first frame after the new data lands,
   // we'd briefly show the just-arrived (still-untranslated cold-path)
   // bytes before the cache hits. We instead hide the body until the
   // fetch is complete AND the request language equals what we asked for.
@@ -77,7 +75,7 @@ function StoryPage() {
 
   return (
     <SiteShell hideNav>
-      {/* TOP NAV STRIP — back link + language picker */}
+      {/* TOP NAV STRIP - back link + language picker */}
       <div className="px-6 pt-2 max-w-6xl mx-auto flex items-center justify-between gap-4 flex-wrap">
         <Link
           to="/stories"
@@ -108,7 +106,7 @@ function StoryPage() {
 
       {/* While switching languages we hide the previous body completely
           (otherwise the stale text flashes for the duration of the
-          refetch — which can be several seconds the first time a given
+          refetch - which can be several seconds the first time a given
           (article, language) pair is translated). */}
       {showTranslating ? (
         <TranslatingIntermediary lang={lang} />
@@ -125,7 +123,7 @@ function looksLikeHTML(s: string): boolean {
 }
 
 /**
- * Drop the FIRST top-level image in an HTML body — it's already shown on
+ * Drop the FIRST top-level image in an HTML body - it's already shown on
  * the blog list as the card thumbnail, so we don't repeat it at the top of
  * the article. Mid-article images (the ones the author actually placed
  * between paragraphs) are untouched.
@@ -140,7 +138,6 @@ function stripFirstImage(html: string): string {
 
 function StoryBody({ data }: { data: { title: string; body_md: string; published_at: string | null } }) {
   const stripped = stripTagsComment(data.body_md || "");
-  const tags = tagsForArticle(data as any);
 
   // HTML body (from the WYSIWYG): pass through directly so the image
   // wrapper spans + float CSS work and text actually wraps around floated
@@ -165,14 +162,6 @@ function StoryBody({ data }: { data: { title: string; body_md: string; published
                 })
               : "Draft"}
           </span>
-          {tags.map((t) => (
-            <span
-              key={t}
-              className="font-mono text-[9px] uppercase tracking-[0.2em] bg-ink/5 text-ink/70 border border-ink/20 px-2 py-0.5"
-            >
-              {t}
-            </span>
-          ))}
         </div>
         <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-tighter leading-[1.05] text-balance max-w-4xl">
           {data.title}
@@ -190,16 +179,19 @@ function StoryBody({ data }: { data: { title: string; body_md: string; published
 }
 
 // ---------------------------------------------------------------------------
-// LanguagePicker — dropdown that drives the `lang` query param.
+// LanguagePicker - dropdown that drives the `lang` query param.
 // ---------------------------------------------------------------------------
 
 /** Languages shown in the picker. Trimmed to English + Nepali for now
  *  while we burn down the Azure Translator free-tier quota. Add codes
- *  back to this array to expose more languages — the rest of the
+ *  back to this array to expose more languages - the rest of the
  *  pipeline already supports any Azure-supported code. */
 const PRIMARY_LANGS: { code: string; label: string }[] = [
-  { code: "", label: "English" },
+  { code: "",   label: "English" },
   { code: "ne", label: "नेपाली · Nepali" },
+  { code: "hi", label: "हिन्दी · Hindi" },
+  { code: "es", label: "Español · Spanish" },
+  { code: "ar", label: "العربية · Arabic" },
 ];
 
 function LanguagePicker({
@@ -231,10 +223,10 @@ function LanguagePicker({
 }
 
 // ---------------------------------------------------------------------------
-// TranslatingIntermediary — full-screen friendly placeholder shown while a
+// TranslatingIntermediary - full-screen friendly placeholder shown while a
 // language switch is in flight. Prevents the previous translation from
 // flashing while React Query refetches the new one (the first hit of a
-// new language can take several seconds — Azure cold-translate + DB save).
+// new language can take several seconds - Azure cold-translate + DB save).
 // ---------------------------------------------------------------------------
 
 const LANG_LABELS: Record<string, string> = {
