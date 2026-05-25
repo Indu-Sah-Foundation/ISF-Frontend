@@ -4,7 +4,7 @@ import { SiteShell } from "@/components/SiteShell";
 export const Route = createFileRoute("/donate/cancelled")({
   head: () => ({
     meta: [
-      { title: "Donation cancelled — Indu Sah Foundation" },
+      { title: "Donation cancelled - Indu Sah Foundation" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -25,7 +25,7 @@ function CancelledPage() {
         <p className="mt-8 text-base sm:text-lg text-muted-foreground leading-relaxed text-pretty">
           You closed the payment page before it was complete, so nothing was
           charged to your card. If something went wrong on our end, please
-          let us know — we're a small team and we read everything.
+          let us know - we're a small team and we read everything.
         </p>
 
         <div className="mt-12 flex flex-wrap justify-center gap-3">
