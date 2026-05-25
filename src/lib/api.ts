@@ -189,6 +189,55 @@ export const auth = {
     typeof window !== "undefined" && Boolean(window.localStorage.getItem(TOKEN_KEY)),
 };
 
+/**
+ * Error thrown by `req()` on a failed request. Carries the HTTP status
+ * (or 0 for network failures) and a user-friendly `message`. Callers
+ * can branch on `status` if they want different behavior per code, but
+ * can also just show `message` directly to users — it's already phrased
+ * for an end-user audience, not a developer.
+ */
+export class ApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+    this.name = "ApiError";
+  }
+}
+
+/**
+ * Translate a raw HTTP failure into copy a visitor can read. The
+ * backend's `{ error: "…" }` body always wins when present — that's
+ * already donor-facing copy (e.g. "The minimum donation is $1.").
+ * Otherwise we synthesize something readable per status family.
+ */
+function friendlyHttpMessage(status: number, statusText: string, isAdmin: boolean): string {
+  switch (status) {
+    case 401:
+      return isAdmin
+        ? "Your session expired. Please sign in again."
+        : "You need to sign in to do that.";
+    case 403:
+      return "You don't have permission to do that.";
+    case 404:
+      return "We couldn't find what you were looking for.";
+    case 409:
+      return "That conflicts with something that already exists.";
+    case 413:
+      return "That file or message is too large.";
+    case 429:
+      return "Too many requests — please wait a moment and try again.";
+    case 502:
+    case 503:
+    case 504:
+      return "Our server is having trouble right now. Please try again in a minute.";
+    default:
+      if (status >= 500) return "Something went wrong on our end. Please try again.";
+      if (status >= 400) return "Something went wrong with that request.";
+      return statusText || "Something went wrong.";
+  }
+}
+
 async function req<T>(
   path: string,
   init: RequestInit & { admin?: boolean } = {},
@@ -199,22 +248,36 @@ async function req<T>(
   };
   if (init.admin) {
     const token = auth.getToken();
-    if (!token) throw new Error("Not authenticated");
+    if (!token) throw new ApiError("Please sign in to continue.", 401);
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const res = await fetch(`${API_BASE}${path}`, { ...init, headers });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, { ...init, headers });
+  } catch {
+    // Network failure: DNS, CORS, offline, etc. fetch throws TypeError.
+    throw new ApiError(
+      "Couldn't reach the server. Check your internet connection and try again.",
+      0,
+    );
+  }
 
   if (res.status === 401 && init.admin) {
     auth.clear();
   }
   if (!res.ok) {
-    let msg = `${res.status} ${res.statusText}`;
+    // Prefer the backend's user-facing message when it sends one.
+    let msg = "";
     try {
       const body = await res.json();
-      if (body?.error) msg = body.error;
-    } catch {}
-    throw new Error(msg);
+      if (body?.error && typeof body.error === "string") msg = body.error;
+    } catch {
+      // Body wasn't JSON or was empty — fall through to the synthesized
+      // friendly message.
+    }
+    if (!msg) msg = friendlyHttpMessage(res.status, res.statusText, !!init.admin);
+    throw new ApiError(msg, res.status);
   }
   if (res.status === 204) return undefined as T;
   return res.json();
