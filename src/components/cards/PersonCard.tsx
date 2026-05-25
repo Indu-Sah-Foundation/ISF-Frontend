@@ -2,11 +2,11 @@ import { useNavigate } from "@tanstack/react-router";
 import { SketchImage } from "@/components/SketchImage";
 
 /**
- * Horizontal split card — image on the left, text on the right.
+ * Horizontal split card - image on the left, text on the right.
  *
  * Two visual variants, picked via the `density` prop:
  *
- *  density="feature" (default)  — About-page founder/advisor card
+ *  density="feature" (default)  - About-page founder/advisor card
  *  ┌──────────────┬──────────────────────────────────────────┐
  *  │              │  Eyebrow                                 │
  *  │              │  Title (large)                           │
@@ -15,7 +15,7 @@ import { SketchImage } from "@/components/SketchImage";
  *  │              │  Footer (motto, chips, …)                │
  *  └──────────────┴──────────────────────────────────────────┘
  *
- *  density="row"  — compact blog list row
+ *  density="row"  - compact blog list row
  *  ┌────────┬────────────────────────────────────────────────┐
  *  │  img   │  eyebrow      title (1 line)                   │
  *  │  thumb │  body (1 line) · footer                        │
@@ -40,9 +40,13 @@ interface Props {
   /** When set, the whole card is clickable and navigates via useNavigate. */
   to?: any;
   params?: any;
+  /** Portrait mode: render the photo as a clean round avatar (no sketch
+   *  frame). Used for leadership / founders / advisors so the rendered
+   *  shape matches the round avatars on /volunteers. */
+  circular?: boolean;
 }
 
-// Per-density style table — keeps the JSX below readable.
+// Per-density style table - keeps the JSX below readable.
 const STYLES: Record<Density, {
   imageCol: string;
   imagePad: string;
@@ -63,7 +67,7 @@ const STYLES: Record<Density, {
     textCol: "md:col-span-9 lg:col-span-10",
     textPad: "py-1",
     title: "font-display text-xl sm:text-2xl font-extrabold tracking-tight text-balance",
-    // No line-clamp on founder/advisor bios — show every word the admin
+    // No line-clamp on founder/advisor bios - show every word the admin
     // typed. Image column stays small (col-span-2/3) so the bio still
     // gets most of the row width.
     body: "text-sm sm:text-base text-muted-foreground leading-snug text-pretty",
@@ -96,11 +100,12 @@ export function PersonCard({
   density = "feature",
   to,
   params,
+  circular = false,
 }: Props) {
   const navigate = useNavigate();
   const s = STYLES[density];
 
-  // Imperative navigation — TanStack <Link> won't render when `to` comes
+  // Imperative navigation - TanStack <Link> won't render when `to` comes
   // through a typed-`any` reusable prop. navigate() always works.
   const clickable = !!to;
   const handleClick = () => {
@@ -121,7 +126,7 @@ export function PersonCard({
       role={clickable ? "link" : undefined}
       tabIndex={clickable ? 0 : undefined}
       className={
-        // No outer border on the article — the SketchImage's frame is the
+        // No outer border on the article - the SketchImage's frame is the
         // visual anchor. Doubling them produced a visible bg-card gap
         // between the two curved borders that the user kept calling
         // "white leak". With only one border there's nothing to leak.
@@ -132,19 +137,37 @@ export function PersonCard({
       {/* `self-start` keeps the image at its own size at the top of the
           grid row instead of stretching to match the (longer) text cell
           height. Critical for `feature` density where bios can run many
-          lines — without this the square photo blew up to match the bio.
+          lines - without this the square photo blew up to match the bio.
           For `row` density the image still uses `h-full` from imageAspect
           so it shares height with the short text. */}
-      <div className={`${s.imageCol} self-start`}>
-        <SketchImage
-          src={image}
-          alt={title}
-          variant={imageVariant}
-          className={`${s.imageAspect} w-full`}
-          fill
-          imgClassName="object-center"
-        />
-      </div>
+      {/* No image? Drop the image column entirely so the text spans the
+          full row instead of leaving an awkward empty placeholder. */}
+      {image && (
+        <div className={`${s.imageCol} self-start`}>
+          {circular ? (
+            // Match the volunteer-page avatar style: bare round photo,
+            // no sketch frame, no border. Caps at 220px so it doesn't
+            // dominate the row in `feature` density.
+            <div className={`${s.imageAspect} w-full max-w-[220px] relative overflow-hidden rounded-full bg-muted`}>
+              <img
+                src={image}
+                alt={title}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            </div>
+          ) : (
+            <SketchImage
+              src={image}
+              alt={title}
+              variant={imageVariant}
+              className={`${s.imageAspect} w-full`}
+              fill
+              imgClassName="object-center"
+            />
+          )}
+        </div>
+      )}
       <div className={`${s.textCol} ${s.textPad} flex flex-col min-w-0`}>
         {eyebrow && (
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary mb-1.5">
