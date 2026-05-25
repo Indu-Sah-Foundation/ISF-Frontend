@@ -238,6 +238,12 @@ function friendlyHttpMessage(status: number, statusText: string, isAdmin: boolea
   }
 }
 
+
+const API_KEY: string =
+  (typeof import.meta !== "undefined" &&
+    (import.meta as any).env?.VITE_ISF_API_KEY) ||
+  "";
+
 async function req<T>(
   path: string,
   init: RequestInit & { admin?: boolean } = {},
@@ -246,6 +252,9 @@ async function req<T>(
     "Content-Type": "application/json",
     ...((init.headers as Record<string, string>) || {}),
   };
+  if (API_KEY) {
+    headers["X-API-Key"] = API_KEY;
+  }
   if (init.admin) {
     const token = auth.getToken();
     if (!token) throw new ApiError("Please sign in to continue.", 401);
