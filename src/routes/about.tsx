@@ -5,7 +5,7 @@ import { SketchImage } from "@/components/SketchImage";
 import { MediaCard } from "@/components/cards/MediaCard";
 import { PersonCard } from "@/components/cards/PersonCard";
 import { api, type TeamMember, type TeamKind } from "@/lib/api";
-import heroImg from "@/assets/program-women.jpg";
+import heroImg from "@/assets/front.png";
 import eduImg from "@/assets/program-education.jpg";
 import healthImg from "@/assets/program-health.jpg";
 import waterImg from "@/assets/program-water.jpg";
@@ -14,19 +14,19 @@ import roboticsImg from "@/assets/program-robotics.jpg";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — Indu Sah Foundation" },
+      { title: "About - Indu Sah Foundation" },
       {
         name: "description",
         content:
           "Indu Sah Foundation: a Nepal-based non-profit established December 24, 2018 by Lal Sah and Dr. Vijay Sah for the health and education of underprivileged children.",
       },
-      { property: "og:title", content: "About — Indu Sah Foundation" },
+      { property: "og:title", content: "About - Indu Sah Foundation" },
     ],
   }),
   component: AboutPage,
 });
 
-// Fallback portrait pool — used when a team member has no image_url set so
+// Fallback portrait pool - used when a team member has no image_url set so
 // the cards still look complete during seeding.
 const fallbackImgs = [healthImg, eduImg, waterImg, roboticsImg, heroImg];
 const pickImg = (i: number) => fallbackImgs[i % fallbackImgs.length];
@@ -42,17 +42,17 @@ function AboutPage() {
 
   return (
     <SiteShell>
-      <header className="px-6 pb-12 max-w-5xl mx-auto">
+      <header className="px-5 sm:px-6 pb-8 sm:pb-12 max-w-5xl mx-auto">
         <span className="font-mono text-primary text-xs uppercase tracking-[0.2em]">
           About Us
         </span>
-        <h1 className="font-display text-5xl md:text-7xl font-extrabold tracking-tighter mt-4 text-balance">
-          A foundation rooted in <span className="pencil-underline">Mahottari</span>.
+        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tighter mt-3 sm:mt-4 text-balance">
+          Who <span className="pencil-underline">we are</span>.
         </h1>
       </header>
 
       <div className="px-6 max-w-7xl mx-auto">
-        {/* Hero — fixed tall height instead of an extreme aspect ratio so
+        {/* Hero - fixed tall height instead of an extreme aspect ratio so
             the image is never letterboxed or weirdly cropped. */}
         <SketchImage
           src={heroImg}
@@ -73,7 +73,7 @@ function AboutPage() {
           Indu Sah Foundation is an emerging non-profit organization established
           on December 24, 2018, registered under section 4 of act 2034 of The
           Government of Nepal, and affiliated with the Social Welfare Council.
-          We are based in Loharpatti, Mahottari, Nepal — 250 kilometers south
+          We are based in Loharpatti, Mahottari, Nepal - 250 kilometers south
           of Kathmandu and 7 kilometers west of Janakpur Dham.
         </p>
         <p>
@@ -95,7 +95,7 @@ function AboutPage() {
             100%
           </div>
           <div className="font-mono text-[11px] uppercase text-muted-foreground tracking-[0.18em] max-w-md">
-            Local leadership — the foundation is run by, and for, the
+            Local leadership - the foundation is run by, and for, the
             communities of Mahottari.
           </div>
         </div>
@@ -130,7 +130,7 @@ function AboutPage() {
         people={byKind("advisor_nat")}
       />
 
-      {/* Board Members — 2 per row using MediaCard */}
+      {/* Board Members - 2 per row using MediaCard */}
       {byKind("board").length > 0 && (
         <section className="border-t border-border py-20 sm:py-24 px-6">
           <div className="max-w-7xl mx-auto">
@@ -144,11 +144,12 @@ function AboutPage() {
               {byKind("board").map((b, i) => (
                 <MediaCard
                   key={b.id}
-                  image={b.image_url || pickImg(i)}
+                  image={b.image_url || ""}
                   imageVariant={i % 2 === 0 ? "default" : "alt"}
-                  aspect="16/10"
+                  aspect="1/1"
                   title={b.name}
                   eyebrow={b.role}
+                  circular
                 />
               ))}
             </div>
@@ -194,7 +195,7 @@ function PeopleSection({
           {people.map((p, i) => (
             <PersonCard
               key={p.id}
-              image={p.image_url || pickImg(i + imgOffset)}
+              image={p.image_url || ""}
               imageVariant={i % 2 === 0 ? "default" : "alt"}
               title={p.name}
               eyebrow={p.role}
@@ -205,6 +206,7 @@ function PeopleSection({
                   <p className="font-display italic text-foreground">"{p.motto}"</p>
                 ) : undefined
               }
+              circular
             />
           ))}
         </div>
