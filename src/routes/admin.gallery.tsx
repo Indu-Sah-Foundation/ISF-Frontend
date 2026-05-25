@@ -9,15 +9,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ArrowLeft, Trash2, Upload, GripVertical } from "lucide-react";
 import { api, type GalleryItem, type GallerySize } from "@/lib/api";
 
-const GALLERY_TAGS = [
-  "Dental",
-  "STEM",
-  "Relief",
-  "Education",
-  "Community",
-  "Events",
-] as const;
-
 export const Route = createFileRoute("/admin/gallery")({
   component: AdminGalleryPage,
 });
@@ -27,6 +18,15 @@ function AdminGalleryPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState<string | null>(null);
   const [error, setError] = useState("");
+
+  // Admin-curated tag names drive both the management panel and the
+  // per-image multi-select below. Fetched from the backend so changes
+  // appear without a code deploy.
+  const { data: tagsData } = useQuery({
+    queryKey: ["admin", "gallery-tags"],
+    queryFn: () => api.listGalleryTags(),
+  });
+  const tagNames = (tagsData?.items || []).map((t) => t.name);
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "gallery"],
@@ -105,7 +105,7 @@ function AdminGalleryPage() {
           </Alert>
         )}
 
-        {/* Uploader — drag/drop or click. Images go to Azure Blob via SAS;
+        {/* Uploader - drag/drop or click. Images go to Azure Blob via SAS;
             only the public URL is stored in Postgres. */}
         <div
           onDragOver={(e) => e.preventDefault()}
@@ -118,7 +118,7 @@ function AdminGalleryPage() {
           <Upload className="w-8 h-8 mx-auto mb-3 text-muted-foreground" />
           <p className="font-display font-bold mb-1">Drag &amp; drop images here</p>
           <p className="text-sm text-muted-foreground mb-4">
-            or click below — JPG / PNG / WEBP
+            or click below - JPG / PNG / WEBP
           </p>
           <input
             ref={inputRef}
@@ -132,9 +132,14 @@ function AdminGalleryPage() {
             {uploading ? `Uploading ${uploading}…` : "Choose images"}
           </Button>
           <p className="text-xs text-muted-foreground mt-4">
-            Saved to Azure Blob + Postgres — visible to everyone immediately.
+            Saved to Azure Blob + Postgres - visible to everyone immediately.
           </p>
         </div>
+
+        {/* Admin-curated tag list. Tags defined here drive both the
+            per-image multi-select on each card AND the section groupings
+            on the public /gallery page. */}
+        <TagsPanel />
 
         {isLoading ? (
           <p className="text-muted-foreground">Loading…</p>
@@ -150,6 +155,7 @@ function AdminGalleryPage() {
               <GalleryRow
                 key={it.id}
                 item={it}
+                tagNames={tagNames}
                 onUpdate={(patch) => updateMut.mutate({ id: it.id, patch })}
                 onDelete={() => {
                   if (confirm(`Delete "${it.title}"? This also deletes the image from Azure Blob.`)) {
@@ -167,10 +173,12 @@ function AdminGalleryPage() {
 
 function GalleryRow({
   item,
+  tagNames,
   onUpdate,
   onDelete,
 }: {
   item: GalleryItem;
+  tagNames: string[];
   onUpdate: (patch: Partial<GalleryItem>) => void;
   onDelete: () => void;
 }) {
@@ -245,7 +253,12 @@ function GalleryRow({
             Tags
           </label>
           <div className="flex flex-wrap gap-1">
-            {GALLERY_TAGS.map((t) => {
+            {tagNames.length === 0 && (
+              <span className="font-mono text-[10px] text-muted-foreground italic">
+                No tags defined yet — add one in the Tags panel above.
+              </span>
+            )}
+            {tagNames.map((t) => {
               const active = draft.tags.includes(t);
               return (
                 <button
@@ -258,7 +271,7 @@ function GalleryRow({
                     setDraft({ ...draft, tags: next });
                   }}
                   className={
-                    "font-mono text-[9px] uppercase tracking-[0.18em] px-2 py-1 border transition-colors " +
+                    "font-mono text-[9px] uppercase tracking-[0.18em] px-2 py-1 border transition-colors text-left max-w-full break-words " +
                     (active
                       ? "border-ink bg-ink text-cream"
                       : "border-ink/30 text-muted-foreground hover:border-ink")
@@ -307,5 +320,98 @@ function GalleryRow({
         </Button>
       </div>
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// TagsPanel — admin-curated list of allowed gallery tag names.
+// ---------------------------------------------------------------------------
+
+function TagsPanel() {
+  const qc = useQueryClient();
+  const [newTag, setNewTag] = useState("");
+
+  const { data } = useQuery({
+    queryKey: ["admin", "gallery-tags"],
+    queryFn: () => api.listGalleryTags(),
+  });
+  const tags = data?.items || [];
+
+  const createMut = useMutation({
+    mutationFn: (name: string) => api.createGalleryTag(name, tags.length),
+    onSuccess: () => {
+      setNewTag("");
+      qc.invalidateQueries({ queryKey: ["admin", "gallery-tags"] });
+    },
+  });
+
+  const deleteMut = useMutation({
+    mutationFn: (id: string) => api.deleteGalleryTag(id),
+    onSuccess: () =>
+      qc.invalidateQueries({ queryKey: ["admin", "gallery-tags"] }),
+  });
+
+  return (
+    <Card className="border-2 border-ink mb-8">
+      <CardContent className="p-5 space-y-4">
+        <div>
+          <h2 className="font-display text-lg font-extrabold tracking-tight">
+            Tags
+          </h2>
+          <p className="text-xs text-muted-foreground mt-1">
+            Tag names become the section headings on the public /gallery
+            page. Add what you need; delete removes the tag from the
+            picker but does NOT untag existing images.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {tags.map((t) => (
+            <span
+              key={t.id}
+              className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] px-3 py-1.5 border-2 border-ink bg-cream max-w-full"
+            >
+              <span className="break-words">{t.name}</span>
+              <button
+                type="button"
+                aria-label={`Delete tag ${t.name}`}
+                onClick={() => {
+                  if (confirm(`Delete tag "${t.name}"?`)) deleteMut.mutate(t.id);
+                }}
+                className="text-muted-foreground hover:text-destructive shrink-0"
+              >
+                <Trash2 className="w-3 h-3" />
+              </button>
+            </span>
+          ))}
+          {tags.length === 0 && (
+            <span className="font-mono text-[11px] text-muted-foreground italic">
+              No tags yet.
+            </span>
+          )}
+        </div>
+
+        <form
+          className="flex gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const name = newTag.trim();
+            if (!name) return;
+            createMut.mutate(name);
+          }}
+        >
+          <Input
+            value={newTag}
+            onChange={(e) => setNewTag(e.target.value)}
+            placeholder="New tag name (e.g. Dental Camp 2024)"
+            disabled={createMut.isPending}
+            className="font-mono text-sm"
+          />
+          <Button type="submit" disabled={!newTag.trim() || createMut.isPending}>
+            {createMut.isPending ? "Adding…" : "Add tag"}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
