@@ -92,7 +92,7 @@ function LoginPage() {
               </Button>
 
               <p className="text-xs text-muted-foreground pt-2">
-                Admin accounts are bootstrapped on the backend — there is no
+                Admin accounts are bootstrapped on the backend - there is no
                 public registration.
               </p>
             </form>
