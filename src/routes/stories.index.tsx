@@ -24,9 +24,14 @@ export const Route = createFileRoute("/stories/")({
     ],
   }),
 
-  validateSearch: (search: Record<string, any>): { page: number } => {
+  // `page` is OPTIONAL in the type so `<Link to="/stories">` callers
+  // elsewhere in the app don't need to pass `search={{ page: 1 }}`.
+  // We only emit ?page= in the URL when the reader has navigated past
+  // page 1 — keeps URLs clean for the common case.
+  validateSearch: (search: Record<string, any>): { page?: number } => {
     const p = Number(search.page);
-    return { page: Number.isFinite(p) && p >= 1 ? Math.floor(p) : 1 };
+    if (Number.isFinite(p) && p >= 2) return { page: Math.floor(p) };
+    return {};
   },
   component: StoriesPage,
 });
@@ -35,15 +40,10 @@ export const Route = createFileRoute("/stories/")({
  *  excerpt suitable for a card preview. */
 function excerpt(body: string, max = 240) {
   const text = body
-    // metadata comments (tags + thumbnail) we ride inside the body
+    // metadata comments (thumbnail marker) ride inside the body
     .replace(/<!--[\s\S]*?-->/g, " ")
-    // strip HTML tags entirely (the WYSIWYG saves HTML, not markdown)
+    // strip HTML tags entirely — bodies are always HTML from the WYSIWYG
     .replace(/<[^>]+>/g, " ")
-    // legacy markdown stripping
-    .replace(/```[\s\S]*?```/g, " ")
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
-    .replace(/[#>*_`~]+/g, " ")
     // decode the most common HTML entities so we don't surface "&amp;"
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
@@ -56,13 +56,10 @@ function excerpt(body: string, max = 240) {
   return text.length > max ? text.slice(0, max).trimEnd() + "…" : text;
 }
 
-/** Pull the first image URL from the body - used as the fallback thumbnail
- *  when the author hasn't set an explicit one. Handles both markdown
- *  `![](url)` from legacy articles AND `<img src="url">` from the new
- *  WYSIWYG editor. */
+/** Pull the first image URL from the body — used as the fallback
+ *  thumbnail when the author hasn't set an explicit one. Bodies are
+ *  always HTML from the WYSIWYG, so we only match <img src="">. */
 function firstImage(body: string): string | null {
-  const md = body.match(/!\[[^\]]*\]\((https?:\/\/[^)]+)\)/);
-  if (md) return md[1];
   const html = body.match(/<img[^>]+src=["'](https?:\/\/[^"']+)["'][^>]*>/i);
   return html ? html[1] : null;
 }
@@ -107,10 +104,17 @@ function BlogRow({ article, idx }: { article: Article; idx: number }) {
 const PAGE_SIZE = 10;
 
 function StoriesPage() {
-  const { page } = useSearch({ from: "/stories/" });
+  // page is undefined when /stories has no ?page= — treat as 1.
+  const search = useSearch({ from: "/stories/" });
+  const page = search.page ?? 1;
   const navigate = useNavigate({ from: "/stories/" });
-  const setPage = (next: number) =>
-    navigate({ search: { page: Math.max(1, next) } });
+  const setPage = (next: number) => {
+    const target = Math.max(1, next);
+    // Omit ?page=1 from the URL so the canonical home of the list is
+    // /stories rather than /stories?page=1. validateSearch enforces
+    // this on read; mirror it on write.
+    navigate({ search: target === 1 ? {} : { page: target } });
+  };
 
   const offset = (page - 1) * PAGE_SIZE;
 
