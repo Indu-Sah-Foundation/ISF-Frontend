@@ -146,11 +146,6 @@ function AdminGalleryPage() {
             createMut.mutate({
               src: url,
               title: "",
-              caption: "",
-              size: "L",
-              tags: [],
-              position: items.length,
-              published: true,
             })
           }
         />
