@@ -1,9 +1,12 @@
-import { Facebook, Mail, MapPin, Phone } from "lucide-react";
+import { Facebook, Mail, MapPin } from "lucide-react";
 
 export function Footer() {
   return (
     <footer className="border-t border-border mt-32">
-      <div className="max-w-7xl mx-auto px-6 py-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+      {/* Phone numbers intentionally omitted here — they live on the
+          /contact page only, to keep the footer compact and avoid
+          duplicating the same info on every page of the site. */}
+      <div className="max-w-7xl mx-auto px-6 py-16 grid sm:grid-cols-3 gap-10">
         <div className="space-y-3">
           <h4 className="font-mono text-[10px] uppercase text-muted-foreground tracking-[0.2em]">
             Head Office
@@ -20,19 +23,6 @@ export function Footer() {
           <p className="text-sm flex items-start gap-2">
             <MapPin size={16} className="mt-0.5 text-primary shrink-0" />
             <span>Hadigau–5, Kathmandu, Nepal</span>
-          </p>
-        </div>
-        <div className="space-y-3">
-          <h4 className="font-mono text-[10px] uppercase text-muted-foreground tracking-[0.2em]">
-            Phone
-          </h4>
-          <p className="text-sm flex items-start gap-2">
-            <Phone size={16} className="mt-0.5 text-primary shrink-0" />
-            <span>
-              <a href="tel:+9779841256519" className="hover:text-primary block">+977-9841256519</a>
-              <a href="tel:+9779805171027" className="hover:text-primary block">+977-9805171027</a>
-              <span className="text-xs font-mono text-muted-foreground">WhatsApp / Viber</span>
-            </span>
           </p>
         </div>
         <div className="space-y-3">
