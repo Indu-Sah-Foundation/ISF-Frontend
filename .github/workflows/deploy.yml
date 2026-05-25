@@ -29,6 +29,7 @@ jobs:
       - name: Build
         env:
           VITE_ISF_API: ${{ secrets.BACKEND_URL }}
+          VITE_ISF_API_KEY: ${{ secrets.VITE_ISF_API_KEY}}
         run: |
           if [ -z "$VITE_ISF_API" ]; then
             echo "::error::VITE_ISF_API is not set. Add it as a GitHub Actions repo variable."
