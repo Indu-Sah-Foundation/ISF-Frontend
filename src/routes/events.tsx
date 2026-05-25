@@ -7,11 +7,11 @@ import { api, type Project, type ProjectBlock } from "@/lib/api";
 export const Route = createFileRoute("/events")({
   head: () => ({
     meta: [
-      { title: "Projects — Indu Sah Foundation" },
+      { title: "Projects - Indu Sah Foundation" },
       {
         name: "description",
         content:
-          "Current and upcoming projects of Indu Sah Foundation — ISF Robotics, ISF SMILE Mobile Dental Clinic, and health, education, and hygiene programs for underprivileged communities in Nepal.",
+          "Current and upcoming projects of Indu Sah Foundation - ISF Robotics, ISF SMILE Mobile Dental Clinic, and health, education, and hygiene programs for underprivileged communities in Nepal.",
       },
     ],
   }),
@@ -48,7 +48,7 @@ function ProjectsPage() {
         </p>
       )}
 
-      {/* CURRENT PROJECTS — each gets a full feature section, alternating tone */}
+      {/* CURRENT PROJECTS - each gets a full feature section, alternating tone */}
       {current.map((p, i) => (
         <section
           key={p.id}
@@ -91,7 +91,7 @@ function ProjectsPage() {
 
       {!isLoading && projects.length === 0 && (
         <p className="px-6 max-w-7xl mx-auto pb-24 text-muted-foreground">
-          No projects published yet — check back soon.
+          No projects published yet - check back soon.
         </p>
       )}
     </SiteShell>
@@ -101,9 +101,10 @@ function ProjectsPage() {
 /* ---------- pieces ---------- */
 
 function ProjectHeading({ project }: { project: Project }) {
+  const hasImage = !!project.image_url?.trim();
   return (
     <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-end">
-      <div className="md:col-span-7">
+      <div className={hasImage ? "md:col-span-7" : "md:col-span-12"}>
         <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-primary">
           {project.label || "Project"}
         </span>
@@ -111,8 +112,8 @@ function ProjectHeading({ project }: { project: Project }) {
           {project.title}
         </h2>
       </div>
-      <div className="md:col-span-5">
-        {project.image_url && (
+      {hasImage && (
+        <div className="md:col-span-5">
           <SketchImage
             src={project.image_url}
             alt={project.title}
@@ -121,8 +122,8 @@ function ProjectHeading({ project }: { project: Project }) {
             fill
             imgClassName="object-center"
           />
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -135,7 +136,7 @@ function Lede({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Render a single body block — paragraph / bullets / subsections. */
+/** Render a single body block - paragraph / bullets / subsections. */
 function BlockRenderer({ block }: { block: ProjectBlock }) {
   if (block.type === "paragraph") {
     return (
@@ -205,14 +206,20 @@ function UpcomingCard({
   project: Project;
   flip: boolean;
 }) {
+  const hasImage = !!project.image_url?.trim();
   return (
-    <article className="border-2 border-ink pencil-shadow bg-card overflow-hidden grid md:grid-cols-12 gap-0">
-      <div
-        className={
-          "md:col-span-5 p-5 md:p-6 " + (flip ? "md:order-2" : "md:order-1")
-        }
-      >
-        {project.image_url && (
+    <article
+      className={
+        "border-2 border-ink pencil-shadow bg-card overflow-hidden grid gap-0 " +
+        (hasImage ? "md:grid-cols-12" : "md:grid-cols-1")
+      }
+    >
+      {hasImage && (
+        <div
+          className={
+            "md:col-span-5 p-5 md:p-6 " + (flip ? "md:order-2" : "md:order-1")
+          }
+        >
           <SketchImage
             src={project.image_url}
             alt={project.title}
@@ -221,12 +228,14 @@ function UpcomingCard({
             fill
             imgClassName="object-center"
           />
-        )}
-      </div>
+        </div>
+      )}
       <div
         className={
-          "md:col-span-7 p-6 sm:p-8 md:py-10 md:px-10 min-w-0 " +
-          (flip ? "md:order-1" : "md:order-2")
+          (hasImage
+            ? "md:col-span-7 " + (flip ? "md:order-1" : "md:order-2") + " "
+            : "") +
+          "p-6 sm:p-8 md:py-10 md:px-10 min-w-0"
         }
       >
         {project.label && (

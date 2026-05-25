@@ -5,7 +5,7 @@ import { Heart } from "lucide-react";
 export const Route = createFileRoute("/donate/thanks")({
   head: () => ({
     meta: [
-      { title: "Thank you — Indu Sah Foundation" },
+      { title: "Thank you - Indu Sah Foundation" },
       {
         name: "description",
         content:
