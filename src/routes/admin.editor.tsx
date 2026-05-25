@@ -19,12 +19,13 @@ import {
 } from "@/lib/tags";
 
 interface SearchParams {
-  id?: string;
+  /** Slug of the article to edit. Falsy = new post. */
+  slug?: string;
 }
 
 export const Route = createFileRoute("/admin/editor")({
   validateSearch: (search: Record<string, any>): SearchParams => ({
-    id: search.id as string | undefined,
+    slug: search.slug as string | undefined,
   }),
   component: EditorPage,
 });
@@ -39,7 +40,8 @@ function EditorPage() {
 
 function Editor() {
   const navigate = useNavigate();
-  const { id: articleId } = useSearch({ from: "/admin/editor" });
+  const { slug: articleSlug } = useSearch({ from: "/admin/editor" });
+  const isEditing = !!articleSlug;
 
   const [article, setArticle] = useState({
     id: "",
@@ -57,7 +59,7 @@ function Editor() {
   const [uploading, setUploading] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!articleId) return;
+    if (!articleSlug) return;
     // Clear any stale article state from a previous editor session so
     // we never flash one blog's content while another is loading.
     setArticle({
@@ -73,20 +75,16 @@ function Editor() {
       setIsLoading(true);
       setError("");
       try {
-        const list = await api.listAllArticles(200, 0);
-        const found = list.items.find((a) => a.id === articleId);
-        if (!found) setError("Blog not found");
-        else {
-          setArticle({ ...found });
-          setIsPublished(!!found.published_at);
-        }
+        const found = await api.getArticle(articleSlug);
+        setArticle({ ...found });
+        setIsPublished(!!found.published_at);
       } catch (e: any) {
         setError(e?.message || "Failed to load blog");
       } finally {
         setIsLoading(false);
       }
     })();
-  }, [articleId]);
+  }, [articleSlug]);
 
   const generateSlug = (title: string) =>
     title
@@ -120,13 +118,8 @@ function Editor() {
 
   const editorValue = useMemo(
     () => stripTagsComment(article.body_md || ""),
-    // Reseed when the URL articleId changes OR when the async load
-    // populates `article.id`. Without the second dep, navigating away
-    // and back to the same article re-rendered with the previous memo'd
-    // value (empty string) and the RichEditor never picked up the
-    // freshly-loaded body - admin saw a blank editor on revisit.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [articleId, article.id],
+    [articleSlug, article.id],
   );
 
   const handleEditorChange = (html: string) => {
@@ -152,8 +145,8 @@ function Editor() {
     setError("");
     setSuccess("");
     try {
-      if (articleId) {
-        await api.updateArticle(articleId, {
+      if (isEditing && article.id) {
+        await api.updateArticle(article.id, {
           title: article.title,
           body_md: article.body_md,
           publish: isPublished,
@@ -200,7 +193,7 @@ function Editor() {
       <Card className="border-2 border-ink pencil-shadow">
         <CardHeader className="flex flex-row items-end justify-between gap-4 flex-wrap">
           <CardTitle className="font-display text-2xl sm:text-3xl font-extrabold tracking-tighter">
-            {articleId ? "Edit Blog" : "Create New Blog"}
+            {isEditing ? "Edit Blog" : "Create New Blog"}
           </CardTitle>
           <div className="flex items-center gap-3 flex-wrap">
             {uploading && (
@@ -263,10 +256,10 @@ function Editor() {
                   setArticle((prev) => ({ ...prev, slug: e.target.value }))
                 }
                 placeholder="blog-url-slug"
-                disabled={isSaving || !!articleId}
+                disabled={isSaving || isEditing}
                 className="mt-1.5 font-mono"
               />
-              {articleId && (
+              {isEditing && (
                 <p className="text-xs text-muted-foreground mt-1">
                   Slug is immutable after creation.
                 </p>
