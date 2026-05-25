@@ -160,13 +160,20 @@ export function RichEditor({
     async (file: File) => {
       if (!editor) return;
       onUploadStart?.(file.name);
+      let sas;
       try {
-        const sas = await api.imageSAS(file);
+        sas = await api.imageSAS(file);
+      } catch (e: unknown) {
+        const msg =
+          e instanceof Error
+            ? e.message
+            : "Couldn't prepare the upload — please try again.";
+        onUploadError?.(`Couldn't prepare "${file.name}" for upload. ${msg}`);
+        onUploadEnd?.(file.name);
+        return;
+      }
+      try {
         await api.uploadToBlob(file, sas.upload_url);
-        // Insert with default align="right" so the next bit of text the
-        // user types wraps to the LEFT of the image (the most common
-        // editorial layout). They can flip to center / left from the
-        // toolbar after selecting it.
         editor
           .chain()
           .focus()
@@ -180,8 +187,12 @@ export function RichEditor({
             },
           })
           .run();
-      } catch (e: any) {
-        onUploadError?.(e?.message || `Failed to upload ${file.name}`);
+      } catch (e: unknown) {
+        const msg =
+          e instanceof Error
+            ? e.message
+            : `Failed to upload ${file.name}.`;
+        onUploadError?.(msg);
       } finally {
         onUploadEnd?.(file.name);
       }
