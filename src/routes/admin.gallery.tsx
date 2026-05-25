@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ArrowLeft, Trash2, Upload, GripVertical } from "lucide-react";
+import { ArrowLeft, Trash2, Upload, GripVertical, Youtube } from "lucide-react";
 import { api, type GalleryItem, type GallerySize } from "@/lib/api";
+import { isYouTubeURL } from "@/lib/youtube";
 
 export const Route = createFileRoute("/admin/gallery")({
   component: AdminGalleryPage,
@@ -135,6 +136,24 @@ function AdminGalleryPage() {
             Saved to Azure Blob + Postgres - visible to everyone immediately.
           </p>
         </div>
+
+        {/* YouTube video tile — gallery items can also be video links,
+            not just images. Stored as a normal gallery row with src set
+            to the YouTube URL; MediaTile + lightbox detect the URL
+            shape and render an iframe instead of an <img>. */}
+        <AddYouTubePanel
+          onAdd={(url) =>
+            createMut.mutate({
+              src: url,
+              title: "",
+              caption: "",
+              size: "L",
+              tags: [],
+              position: items.length,
+              published: true,
+            })
+          }
+        />
 
         {/* Admin-curated tag list. Tags defined here drive both the
             per-image multi-select on each card AND the section groupings
@@ -411,6 +430,66 @@ function TagsPanel() {
             {createMut.isPending ? "Adding…" : "Add tag"}
           </Button>
         </form>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// AddYouTubePanel — paste a YouTube URL, create a gallery row whose `src`
+// is the YouTube link instead of a Blob URL. The public renderer detects
+// the URL shape and shows an iframe.
+// ---------------------------------------------------------------------------
+
+function AddYouTubePanel({ onAdd }: { onAdd: (url: string) => void }) {
+  const [url, setUrl] = useState("");
+  const [touched, setTouched] = useState(false);
+  const valid = isYouTubeURL(url.trim());
+
+  return (
+    <Card className="border-2 border-ink mb-8">
+      <CardContent className="p-5 space-y-3">
+        <div className="flex items-center gap-2">
+          <Youtube className="w-5 h-5 text-destructive" />
+          <h2 className="font-display text-lg font-extrabold tracking-tight">
+            Add a YouTube video
+          </h2>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Paste a YouTube URL (youtube.com/watch?v=… or youtu.be/…). It will
+          appear in the gallery as a playable embed, sized large by default.
+        </p>
+        <form
+          className="flex flex-col sm:flex-row gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!valid) {
+              setTouched(true);
+              return;
+            }
+            onAdd(url.trim());
+            setUrl("");
+            setTouched(false);
+          }}
+        >
+          <Input
+            value={url}
+            onChange={(e) => {
+              setUrl(e.target.value);
+              setTouched(true);
+            }}
+            placeholder="https://youtu.be/dQw4w9WgXcQ"
+            className="font-mono text-sm flex-1"
+          />
+          <Button type="submit" disabled={!valid}>
+            Add video
+          </Button>
+        </form>
+        {touched && url && !valid && (
+          <p className="text-xs text-destructive font-mono">
+            That doesn't look like a YouTube URL.
+          </p>
+        )}
       </CardContent>
     </Card>
   );
