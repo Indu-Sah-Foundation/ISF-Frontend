@@ -192,7 +192,7 @@ function ArticlesPage() {
                             <Button size="sm" variant="ghost" asChild>
                               <Link
                                 to="/admin/editor"
-                                search={{ id: article.id }}
+                                search={{ slug: article.slug }}
                                 aria-label="Edit"
                               >
                                 <Edit className="w-4 h-4" />
