@@ -61,7 +61,7 @@ function ContactPage() {
           Contact
         </span>
         <h1 className="font-display text-5xl md:text-7xl font-extrabold tracking-tighter mt-4 mb-6 text-balance">
-          Let's talk.
+          Get involved.
         </h1>
       </header>
 
