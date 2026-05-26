@@ -61,7 +61,7 @@ function ContactPage() {
           Contact
         </span>
         <h1 className="font-display text-5xl md:text-7xl font-extrabold tracking-tighter mt-4 mb-6 text-balance">
-          Get involved.
+          Get <span className="pencil-underline">involved</span>.
         </h1>
       </header>
 
