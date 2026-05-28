@@ -4,7 +4,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/SiteShell";
 import { MediaTile } from "@/components/cards/MediaTile";
 import { api } from "@/lib/api";
-import heroImg from "@/assets/hero.png";
+import heroImg from "@/assets/hero.webp";
 import eduImg from "@/assets/program-education.jpg";
 import healthImg from "@/assets/program-health.jpg";
 import roboticsImg from "@/assets/program-robotics.jpg";
