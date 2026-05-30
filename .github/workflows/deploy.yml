@@ -12,7 +12,9 @@ jobs:
   build_and_deploy:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: Build and deploy
+    # On a PR this builds + deploys to an isolated SWA PREVIEW URL.
+    # On push to main it builds + deploys to PRODUCTION (the live site).
+    name: ${{ github.event_name == 'push' && 'Build & deploy to production' || 'Build & deploy PR preview' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,6 +32,7 @@ jobs:
         env:
           VITE_ISF_API: ${{ secrets.BACKEND_URL }}
           VITE_ISF_API_KEY: ${{ secrets.VITE_ISF_API_KEY }}
+          VITE_APPINSIGHTS_CONNECTION_STRING: ${{ secrets.VITE_APPINSIGHTS_CONNECTION_STRING }}
         run: |
           if [ -z "$VITE_ISF_API" ]; then
             echo "::error::VITE_ISF_API is not set. Add it as a GitHub Actions repo variable."
@@ -77,7 +80,7 @@ jobs:
   close_pr:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
-    name: Close preview
+    name: Tear down PR preview
     steps:
       - uses: Azure/static-web-apps-deploy@v1
         with:
