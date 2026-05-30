@@ -30,7 +30,7 @@ function ProjectsPage() {
 
   return (
     <SiteShell>
-      <header className="px-6 pb-12 max-w-7xl mx-auto">
+      <header className="px-6 pt-10 sm:pt-16 pb-12 max-w-7xl mx-auto">
         <span className="font-mono text-primary text-xs uppercase tracking-[0.2em]">
           Projects
         </span>

@@ -136,7 +136,7 @@ function StoriesPage() {
 
   return (
     <SiteShell>
-      <header className="px-5 sm:px-6 pb-8 sm:pb-12 max-w-7xl mx-auto border-b border-border">
+      <header className="px-5 sm:px-6 pt-10 sm:pt-16 pb-8 sm:pb-12 max-w-7xl mx-auto border-b border-border">
         <span className="font-mono text-primary text-xs uppercase tracking-[0.2em]">
           Updates from the Foundation
         </span>

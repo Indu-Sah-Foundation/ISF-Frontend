@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 
@@ -13,41 +13,71 @@ const links = [
   { to: "/contact", label: "Contact" },
 ] as const;
 
-export function Nav() {
+export function Nav({ collapsed = false }: { collapsed?: boolean }) {
   const [open, setOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
-  const lastY = useRef(0);
+  const [homeHidden, setHomeHidden] = useState(false);
+
+  const isHome = useRouterState({ select: (s) => s.location.pathname === "/" });
 
   useEffect(() => {
+    if (!isHome) return;
+    let lastY = window.scrollY;
     const onScroll = () => {
       const y = window.scrollY;
-      const delta = y - lastY.current;
-      // Always show near top
+      const delta = y - lastY;
       if (y < 80) {
-        setHidden(false);
+        setHomeHidden(false);
       } else if (delta > 6) {
-        setHidden(true);
+        setHomeHidden(true);
         setOpen(false);
       } else if (delta < -6) {
-        setHidden(false);
+        setHomeHidden(false);
       }
-      lastY.current = y;
+      lastY = y;
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [isHome]);
+
+  // Close the mobile menu if the bar collapses out from under it.
+  useEffect(() => {
+    if (collapsed) setOpen(false);
+  }, [collapsed]);
+
+  const barBg = isHome ? "navbar-transparent" : "bg-white";
+  const textColor = isHome ? "text-white" : "text-zinc-900";
+
+  const heightClasses = "h-24 sm:h-28 md:h-32 lg:h-36";
 
   return (
     <nav
       className={
-        "navbar-transparent fixed top-0 z-50 w-full border-b border-border/50 transition-transform duration-300 will-change-transform " +
-        (hidden ? "-translate-y-full" : "translate-y-0")
+        barBg +
+        " " +
+        textColor +
+        " z-50 w-full " +
+        (isHome
+          ? 
+            "fixed top-0 border-b border-border/50 transition-[transform,background-color] duration-300 will-change-transform " +
+            (homeHidden ? "-translate-y-full" : "translate-y-0")
+          : 
+            "relative shrink-0 transition-[height] duration-300 " +
+            (collapsed
+              ? "h-0 overflow-hidden border-b-0"
+              : heightClasses +
+                " border-b border-zinc-200 shadow-sm " +
+                (open ? "overflow-visible" : "overflow-hidden")))
       }
     >
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10 h-24 sm:h-28 md:h-32 lg:h-36 flex items-center justify-between gap-4">
+      <div
+        className={
+          "max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10 flex items-center justify-between gap-4 " +
+          (isHome ? heightClasses : "h-full")
+        }
+      >
         <Logo />
 
-        <div className="hidden lg:flex items-center gap-6 xl:gap-9 font-display text-[12px] xl:text-[13px] font-semibold uppercase tracking-[0.18em] text-white">
+        <div className="hidden lg:flex items-center gap-6 xl:gap-9 font-display text-[12px] xl:text-[13px] font-semibold uppercase tracking-[0.18em]">
           {links.map((l) => (
             <Link key={l.to} to={l.to} className="nav-link whitespace-nowrap">
               {l.label}
@@ -62,7 +92,7 @@ export function Nav() {
         </div>
 
         <button
-          className="lg:hidden p-2 -mr-2 shrink-0 text-white"
+          className="lg:hidden p-2 -mr-2 shrink-0"
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
@@ -72,14 +102,21 @@ export function Nav() {
       </div>
 
       {open && (
-        <div className="lg:hidden border-t border-border bg-background/20 backdrop-blur-lg">
-          <div className="px-4 sm:px-6 py-6 flex flex-col gap-1 font-display text-sm font-semibold uppercase tracking-[0.18em] text-white">
+        <div
+          className={
+            "lg:hidden border-t " +
+            (isHome
+              ? "border-border bg-background/20 backdrop-blur-lg"
+              : "border-zinc-200 bg-white")
+          }
+        >
+          <div className="px-4 sm:px-6 py-6 flex flex-col gap-1 font-display text-sm font-semibold uppercase tracking-[0.18em]">
             {links.map((l) => (
               <Link
                 key={l.to}
                 to={l.to}
                 onClick={() => setOpen(false)}
-                className="nav-link py-3 border-b border-border last:border-b-0 hover:text-gray-300"
+                className="nav-link py-3 border-b border-current/15 last:border-b-0 opacity-90 hover:opacity-100"
               >
                 {l.label}
               </Link>
