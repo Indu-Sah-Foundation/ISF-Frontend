@@ -3,7 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/SiteShell";
 import { MediaTile } from "@/components/cards/MediaTile";
+import { SketchImage } from "@/components/SketchImage";
 import { api } from "@/lib/api";
+import { readThumbnail } from "@/lib/tags";
 import heroImg from "@/assets/hero.webp";
 import eduImg from "@/assets/program-education.jpg";
 import healthImg from "@/assets/program-health.jpg";
@@ -23,8 +25,17 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-// Fallback program imagery used when a project row has no image_url yet.
 const programFallbacks = [healthImg, roboticsImg, eduImg];
+
+const storyFallbacks = [eduImg, healthImg, roboticsImg];
+
+function storyImage(body: string | undefined): string | null {
+  if (!body) return null;
+  const explicit = readThumbnail(body);
+  if (explicit) return explicit;
+  const inline = body.match(/<img[^>]+src=["']([^"']+)["']/i);
+  return inline ? inline[1] : null;
+}
 
 function HomePage() {
   const articles = useQuery({
@@ -313,6 +324,13 @@ function HomePage() {
                   params={{ slug: a.slug }}
                   className="group block border-t border-ink pt-6"
                 >
+                  <SketchImage
+                    src={storyImage(a.body_md) || storyFallbacks[i % storyFallbacks.length]}
+                    alt={a.title}
+                    fill
+                    variant={i % 2 === 0 ? "default" : "alt"}
+                    className="aspect-[16/10] mb-5"
+                  />
                   <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
                     Story · {String(i + 1).padStart(2, "0")}
                   </span>
