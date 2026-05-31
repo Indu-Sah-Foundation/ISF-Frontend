@@ -43,3 +43,5 @@ fix.txt
 TODO.md
 /scratch
 Articles.txt
+/playwright-report
+/test-results
