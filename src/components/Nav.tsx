@@ -77,7 +77,7 @@ export function Nav({ collapsed = false }: { collapsed?: boolean }) {
       >
         <Logo />
 
-        <div className="hidden lg:flex items-center gap-6 xl:gap-9 font-display text-[12px] xl:text-[13px] font-semibold uppercase tracking-[0.18em]">
+        <div className="hidden xl:flex items-center gap-6 2xl:gap-9 font-display text-[12px] 2xl:text-[13px] font-semibold uppercase tracking-[0.18em]">
           {links.map((l) => (
             <Link key={l.to} to={l.to} className="nav-link whitespace-nowrap">
               {l.label}
@@ -92,7 +92,7 @@ export function Nav({ collapsed = false }: { collapsed?: boolean }) {
         </div>
 
         <button
-          className="lg:hidden p-2 -mr-2 shrink-0"
+          className="xl:hidden p-2 -mr-2 shrink-0"
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
@@ -104,7 +104,7 @@ export function Nav({ collapsed = false }: { collapsed?: boolean }) {
       {open && (
         <div
           className={
-            "lg:hidden border-t " +
+            "xl:hidden border-t " +
             (isHome
               ? "border-border bg-background/20 backdrop-blur-lg"
               : "border-zinc-200 bg-white")
