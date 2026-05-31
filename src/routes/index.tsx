@@ -281,7 +281,7 @@ function HomePage() {
                 Recent
               </span>
               <h2 className="font-display text-4xl md:text-5xl font-extrabold tracking-tighter text-balance">
-                Blogs
+                <span className="pencil-underline">Blogs</span>
               </h2>
             </div>
             <Link
