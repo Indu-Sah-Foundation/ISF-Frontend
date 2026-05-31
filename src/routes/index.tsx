@@ -265,11 +265,6 @@ function HomePage() {
                 aspect="4/5"
                 title={p.title}
                 caption={p.lede}
-                badge={
-                  <span className="absolute top-4 left-4 font-mono text-5xl md:text-6xl text-cream/60 font-extrabold mix-blend-overlay">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                }
               />
             ))}
           </div>

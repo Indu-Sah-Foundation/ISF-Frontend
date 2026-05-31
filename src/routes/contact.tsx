@@ -82,31 +82,6 @@ function ContactPage() {
           </div>
           <div>
             <h3 className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
-              Branch Office
-            </h3>
-            <p className="font-display text-lg flex items-start gap-3">
-              <MapPin size={18} className="mt-1 text-primary shrink-0" />
-              <span>Hadigau–5, Kathmandu, Nepal</span>
-            </p>
-          </div>
-          <div>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
-              Phone
-            </h3>
-            <p className="font-display text-lg flex items-center gap-3">
-              <Phone size={18} className="text-primary shrink-0" />
-              <span>
-                <a href="tel:+9779841256519" className="hover:text-primary">+977-9841256519</a>
-                <br />
-                <a href="tel:+9779805171027" className="hover:text-primary">+977-9805171027</a>
-                <span className="block text-xs font-mono text-muted-foreground mt-1">
-                  WhatsApp / Viber: +977-9805171027
-                </span>
-              </span>
-            </p>
-          </div>
-          <div>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
               Email
             </h3>
             <p className="font-display text-lg flex items-center gap-3">

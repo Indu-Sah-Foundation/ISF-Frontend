@@ -6,7 +6,7 @@ export function Footer() {
       {/* Phone numbers intentionally omitted here — they live on the
           /contact page only, to keep the footer compact and avoid
           duplicating the same info on every page of the site. */}
-      <div className="max-w-7xl mx-auto px-6 py-16 grid sm:grid-cols-3 gap-10">
+      <div className="max-w-7xl mx-auto px-6 py-16 grid sm:grid-cols-2 gap-10">
         <div className="space-y-3">
           <h4 className="font-mono text-[10px] uppercase text-muted-foreground tracking-[0.2em]">
             Head Office
@@ -14,15 +14,6 @@ export function Footer() {
           <p className="text-sm flex items-start gap-2">
             <MapPin size={16} className="mt-0.5 text-primary shrink-0" />
             <span>Loharpatti–2, Mahottari<br />Province 2, Nepal</span>
-          </p>
-        </div>
-        <div className="space-y-3">
-          <h4 className="font-mono text-[10px] uppercase text-muted-foreground tracking-[0.2em]">
-            Branch Office
-          </h4>
-          <p className="text-sm flex items-start gap-2">
-            <MapPin size={16} className="mt-0.5 text-primary shrink-0" />
-            <span>Hadigau–5, Kathmandu, Nepal</span>
           </p>
         </div>
         <div className="space-y-3">
@@ -51,7 +42,7 @@ export function Footer() {
 
       <div className="border-t border-border bg-secondary/30">
         <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row gap-3 justify-between font-display text-base md:text-lg font-semibold tracking-tight">
-          <p>© {new Date().getFullYear()} Indu Sah Foundation</p>
+          <p>© Indu Sah Foundation {new Date().getFullYear()}</p>
           <p className="text-muted-foreground">Loharpatti · Mahottari · Nepal</p>
         </div>
       </div>
