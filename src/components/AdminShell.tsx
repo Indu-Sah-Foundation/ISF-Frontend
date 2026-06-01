@@ -10,6 +10,7 @@ import {
   Users,
   UserSquare2,
   Mail,
+  Wrench,
 } from "lucide-react";
 import { auth, type AdminUser } from "@/lib/api";
 import { Logo } from "./Logo";
@@ -23,6 +24,7 @@ const links = [
   { to: "/admin/volunteers", label: "Volunteers", icon: Users, exact: false },
   { to: "/admin/gallery", label: "Gallery", icon: ImageIcon, exact: false },
   { to: "/admin/contacts", label: "Messages", icon: Mail, exact: false },
+  { to: "/admin/maintenance", label: "Maintenance", icon: Wrench, exact: false },
 ] as const;
 
 /**
