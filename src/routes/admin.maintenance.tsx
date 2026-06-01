@@ -97,7 +97,8 @@ function AdminMaintenancePage() {
                   rows={5}
                   maxLength={5000}
                   placeholder="Steps to reproduce, what page, what you expected…"
-                  className="w-full py-3 px-4 bg-background border border-border focus:border-primary outline-none font-display resize-y"
+                  wrap="soft"
+                  className="block w-full py-3 px-4 bg-background border border-border focus:border-primary outline-none font-display resize-none overflow-x-hidden whitespace-pre-wrap break-words box-border"
                 />
               </div>
 
