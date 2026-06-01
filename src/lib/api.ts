@@ -161,6 +161,19 @@ export interface ContactMessage {
   created_at: string;
 }
 
+export interface MaintenanceIssue {
+  number: number;
+  html_url: string;
+  title: string;
+  state: string;
+}
+
+export interface MaintenanceResult {
+  issue: MaintenanceIssue;
+  repo: string;
+  area: "frontend" | "backend" | "infra";
+}
+
 const TOKEN_KEY = "isf_admin_token";
 const USER_KEY = "isf_admin_user";
 
@@ -635,6 +648,17 @@ export const api = {
       method: "DELETE",
       admin: true,
     }),
+
+  // ---------- Maintenance → GitHub issues (admin) ----------
+  createMaintenance: (input: { title: string; description: string }) =>
+    req<MaintenanceResult>(`/admin/maintenance`, {
+      method: "POST",
+      admin: true,
+      body: JSON.stringify(input),
+    }),
+
+  listMaintenance: () =>
+    req<{ items: MaintenanceIssue[] }>(`/admin/maintenance`, { admin: true }),
 
   uploadToBlob: async (file: File, uploadURL: string): Promise<void> => {
     let res: Response;
