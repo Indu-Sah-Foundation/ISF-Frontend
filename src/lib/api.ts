@@ -166,6 +166,7 @@ export interface MaintenanceIssue {
   html_url: string;
   title: string;
   state: string;
+  closed_at?: string | null;
 }
 
 export interface MaintenanceResult {
