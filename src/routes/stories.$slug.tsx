@@ -110,7 +110,7 @@ function StoryPage() {
       {showTranslating ? (
         <TranslatingIntermediary lang={lang} />
       ) : (
-        data && <StoryBody data={data} lang={renderedLang.current} />
+        data && <StoryBody data={data} lang={lang} />
       )}
     </SiteShell>
   );
