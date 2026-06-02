@@ -23,7 +23,7 @@ const links = [
   { to: "/admin/team", label: "Team", icon: UserSquare2, exact: false },
   { to: "/admin/volunteers", label: "Volunteers", icon: Users, exact: false },
   { to: "/admin/gallery", label: "Gallery", icon: ImageIcon, exact: false },
-  { to: "/admin/contacts", label: "Messages", icon: Mail, exact: false },
+  { to: "/admin/contacts", label: "Activity", icon: Mail, exact: false },
   { to: "/admin/maintenance", label: "Maintenance", icon: Wrench, exact: false },
 ] as const;
 
