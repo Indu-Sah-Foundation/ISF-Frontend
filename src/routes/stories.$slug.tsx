@@ -110,7 +110,7 @@ function StoryPage() {
       {showTranslating ? (
         <TranslatingIntermediary lang={lang} />
       ) : (
-        data && <StoryBody data={data} />
+        data && <StoryBody data={data} lang={renderedLang.current} />
       )}
     </SiteShell>
   );
@@ -130,7 +130,20 @@ function stripFirstImage(html: string): string {
   return html.replace(/<img[^>]*>/i, "");
 }
 
-function StoryBody({ data }: { data: { title: string; body_md: string; published_at: string | null } }) {
+
+const RTL_LANGS = new Set(["ar", "he", "fa", "ur"]);
+
+function isRTL(lang: string): boolean {
+  return RTL_LANGS.has(lang.toLowerCase().split("-")[0]);
+}
+
+function StoryBody({
+  data,
+  lang,
+}: {
+  data: { title: string; body_md: string; published_at: string | null };
+  lang: string;
+}) {
   // Every body is HTML (the WYSIWYG always saves HTML). Pass through
   // directly so the image wrapper spans + float CSS work and text
   // wraps around floated images. Then expand any YouTube links into
@@ -138,6 +151,9 @@ function StoryBody({ data }: { data: { title: string; body_md: string; published
   const stripped = stripTagsComment(data.body_md || "");
   const cleaned = stripFirstImage(stripped);
   const html = expandYouTubeEmbeds(cleaned);
+
+  const rtl = isRTL(lang);
+  const dir = rtl ? "rtl" : "ltr";
 
   return (
     <>
@@ -153,14 +169,23 @@ function StoryBody({ data }: { data: { title: string; body_md: string; published
               : "Draft"}
           </span>
         </div>
-        <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-tighter leading-[1.05] text-balance max-w-4xl">
+        <h1
+          dir={dir}
+          className={
+            "font-display text-4xl md:text-6xl font-extrabold tracking-tighter leading-[1.05] text-balance max-w-4xl " +
+            (rtl ? "text-right ml-auto" : "")
+          }
+        >
           {data.title}
         </h1>
       </header>
 
       <article className="px-6 max-w-6xl mx-auto pb-24">
         <div
-          className="prose-article max-w-none"
+          dir={dir}
+          className={
+            "prose-article max-w-none " + (rtl ? "text-right" : "")
+          }
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </article>
