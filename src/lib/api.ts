@@ -175,6 +175,19 @@ export interface MaintenanceResult {
   area: "frontend" | "backend" | "infra";
 }
 
+export interface Donation {
+  id: string;
+  amount_cents: number;
+  currency: string;
+  email: string | null;
+  name: string | null;
+  status: string;
+  stripe_session_id: string;
+  stripe_payment_intent_id?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 const TOKEN_KEY = "isf_admin_token";
 const USER_KEY = "isf_admin_user";
 
@@ -378,6 +391,13 @@ export const api = {
       method: "POST",
       body: JSON.stringify(body),
     }),
+
+  // Admin: list donations (defaults to paid, live-money rows on the backend).
+  listDonations: (limit = 200, offset = 0) =>
+    req<{ items: Donation[]; count: number; limit: number; offset: number }>(
+      `/donations?limit=${limit}&offset=${offset}`,
+      { admin: true },
+    ),
 
   // ---------- Image uploads (admin only) ----------
   // Two-step direct-to-Blob: backend signs a short-lived SAS URL, browser PUTs
