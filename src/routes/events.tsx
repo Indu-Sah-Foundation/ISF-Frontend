@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { SiteShell } from "@/components/SiteShell";
 import { SketchImage } from "@/components/SketchImage";
@@ -28,6 +29,18 @@ function ProjectsPage() {
   const current = projects.filter((p) => p.kind === "current");
   const upcoming = projects.filter((p) => p.kind === "upcoming");
 
+  useEffect(() => {
+    if (!projects.length) return;
+    const id = window.location.hash.slice(1);
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (el) {
+      requestAnimationFrame(() =>
+        el.scrollIntoView({ behavior: "smooth", block: "start" }),
+      );
+    }
+  }, [projects.length]);
+
   return (
     <SiteShell>
       <header className="px-6 pt-10 sm:pt-16 pb-12 max-w-7xl mx-auto">
@@ -52,8 +65,9 @@ function ProjectsPage() {
       {current.map((p, i) => (
         <section
           key={p.id}
+          id={p.slug}
           className={
-            "px-6 pb-16 " +
+            "px-6 pb-16 scroll-mt-28 sm:scroll-mt-32 " +
             (i % 2 === 1 ? "border-t border-border bg-secondary/40 py-16 sm:py-20" : "")
           }
         >

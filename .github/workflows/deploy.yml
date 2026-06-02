@@ -1,12 +1,15 @@
-
 name: Deploy frontend
 
 on:
-  push:
+  workflow_run:
+    workflows: ["E2E tests"]
     branches: [main]
+    types:
+      - completed
 
 jobs:
   build_and_deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     name: Build & deploy to production
     steps:
