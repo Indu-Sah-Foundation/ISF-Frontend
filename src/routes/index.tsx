@@ -257,15 +257,22 @@ function HomePage() {
         {programs.length > 0 && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
             {programs.map((p, i) => (
-              <MediaTile
+              <Link
                 key={p.id}
-                image={p.image_url || programFallbacks[i % programFallbacks.length]}
-                alt={p.title}
-                imageVariant={i % 2 === 0 ? "default" : "alt"}
-                aspect="4/5"
-                title={p.title}
-                caption={p.lede}
-              />
+                to="/events"
+                hash={p.slug}
+                className="block group"
+                aria-label={`View ${p.title}`}
+              >
+                <MediaTile
+                  image={p.image_url || programFallbacks[i % programFallbacks.length]}
+                  alt={p.title}
+                  imageVariant={i % 2 === 0 ? "default" : "alt"}
+                  aspect="4/5"
+                  title={p.title}
+                  caption={p.lede}
+                />
+              </Link>
             ))}
           </div>
         )}
