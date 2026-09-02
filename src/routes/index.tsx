@@ -99,7 +99,9 @@ function HomePage() {
               Indu Sah Foundation is a non-profit, non-political, non-religious
               organization based 250km south of Kathmandu. Our core mission is
               to help underprivileged children for{" "}
-              <span className="text-primary italic">better health and education.</span>
+              <span className="text-primary italic">
+                better health and education.
+              </span>
             </p>
           </div>
         </div>
@@ -147,41 +149,39 @@ function HomePage() {
           <div className="md:col-span-8 space-y-10 text-base md:text-lg leading-relaxed text-pretty">
             <article className="space-y-5">
               <p>
-                My brother and I were discussing doing some charity work in
-                the school where we were once students in high school. I had
-                a thought about charity from the very beginning of my
-                childhood. I used to feel happier throughout the day when I
-                got many chances to do things for the disadvantaged community
-                in my village, Madhepura. We lost our mother in our childhood,
-                so I proposed the idea of Indu Sah (our late mother)
-                Foundation (ISF).
+                My brother and I were discussing doing some charity work in the
+                school where we were once students in high school. I had a
+                thought about charity from the very beginning of my childhood. I
+                used to feel happier throughout the day when I got many chances
+                to do things for the disadvantaged community in my village,
+                Madhepura. We lost our mother in our childhood, so I proposed
+                the idea of Indu Sah (our late mother) Foundation (ISF).
               </p>
               <p>
-                We agreed on healthcare and education. Our foundation is
-                teaming up with multiple helping hands, foundations, donors,
-                and human resources in Nepal and around the world to take on
-                some tough challenges: better healthcare and education for
-                all the resourceless people under the extreme poverty line
-                in every region of Nepal. Our vision is to help people all
-                around the world. We focus on only a few issues because we
-                think that's the best way to have a great impact, and we
-                focus on these issues in particular because we think they
-                are the biggest barriers that prevent people from making
-                the most of their lives.
+                We agreed on healthcare and education. Our foundation is teaming
+                up with multiple helping hands, foundations, donors, and human
+                resources in Nepal and around the world to take on some tough
+                challenges: better healthcare and education for all the
+                resourceless people under the extreme poverty line in every
+                region of Nepal. Our vision is to help people all around the
+                world. We focus on only a few issues because we think that's the
+                best way to have a great impact, and we focus on these issues in
+                particular because we think they are the biggest barriers that
+                prevent people from making the most of their lives.
               </p>
               <p>
-                The core strategy of our foundation will be promoting health
-                and providing health education for a better future for the
-                family and the children in Nepal. We started from southern
-                Nepal, Mahottari, where we grew up. As we learn which bets
-                pay off, we must adjust our strategies and share the results
-                so everyone can benefit.
+                The core strategy of our foundation will be promoting health and
+                providing health education for a better future for the family
+                and the children in Nepal. We started from southern Nepal,
+                Mahottari, where we grew up. As we learn which bets pay off, we
+                must adjust our strategies and share the results so everyone can
+                benefit.
               </p>
               <p>
-                We're optimistic and believe deeply in philanthropy. We
-                believe by doing these things, promoting and educating for
-                better health, we can help every person get the chance to
-                live a healthy and productive life.
+                We're optimistic and believe deeply in philanthropy. We believe
+                by doing these things, promoting and educating for better
+                health, we can help every person get the chance to live a
+                healthy and productive life.
               </p>
               <footer className="pt-2 font-mono text-xs uppercase tracking-[0.18em] text-primary">
                 Lal Sah, Dr. Vijay Sah
@@ -194,15 +194,15 @@ function HomePage() {
             <article className="space-y-5 pt-8 border-t border-border">
               <p>
                 I have had life-changing experiences through programs like
-                FIRST, which I joined when I was 8 years old. In it I
-                learned essential soft and technical skills that have
-                profoundly impacted who I am today. I want to bring this
-                program and others like it to the less fortunate and give
-                them the same life-changing experience.
+                FIRST, which I joined when I was 8 years old. In it I learned
+                essential soft and technical skills that have profoundly
+                impacted who I am today. I want to bring this program and others
+                like it to the less fortunate and give them the same
+                life-changing experience.
               </p>
               <p>
-                With the help of my uncle and father, I want to make the
-                lives of others better through health and education.
+                With the help of my uncle and father, I want to make the lives
+                of others better through health and education.
               </p>
               <footer className="pt-2 font-mono text-xs uppercase tracking-[0.18em] text-primary">
                 Shubham Sah
@@ -214,70 +214,6 @@ function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Programs */}
-      <section className="py-24 md:py-32 px-6 max-w-7xl mx-auto">
-        <div className="mb-16 flex items-end justify-between gap-6 flex-wrap">
-          <div>
-            <span className="font-mono text-primary text-xs font-medium uppercase tracking-[0.2em] mb-3 block">
-              Our Work
-            </span>
-            <h2 className="font-display text-4xl md:text-5xl font-extrabold tracking-tighter">
-              Active <span className="pencil-underline">projects</span>
-            </h2>
-          </div>
-          <Link
-            to="/events"
-            className="font-mono text-xs uppercase underline underline-offset-4 decoration-primary inline-flex items-center gap-1.5"
-          >
-            View all <ArrowUpRight size={14} />
-          </Link>
-        </div>
-
-        {projects.isLoading && (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            {[0, 1, 2].map((i) => (
-              <div key={i} className="aspect-[4/5] bg-muted animate-pulse rounded" />
-            ))}
-          </div>
-        )}
-
-        {projects.isError && (
-          <p className="text-muted-foreground font-mono text-sm">
-            Programs are temporarily unavailable.
-          </p>
-        )}
-
-        {!projects.isLoading && programs.length === 0 && (
-          <p className="text-muted-foreground">
-            No current projects yet - check back soon.
-          </p>
-        )}
-
-        {programs.length > 0 && (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            {programs.map((p, i) => (
-              <Link
-                key={p.id}
-                to="/events"
-                hash={p.slug}
-                className="block group"
-                aria-label={`View ${p.title}`}
-              >
-                <MediaTile
-                  image={p.image_url || programFallbacks[i % programFallbacks.length]}
-                  alt={p.title}
-                  imageVariant={i % 2 === 0 ? "default" : "alt"}
-                  aspect="4/5"
-                  title={p.title}
-                  caption={p.lede}
-                />
-              </Link>
-            ))}
-          </div>
-        )}
-      </section>
-
 
       {/* Stories from backend */}
       <section className="py-24 px-6 bg-secondary/40 border-y border-border">
@@ -327,7 +263,10 @@ function HomePage() {
                   className="group block border-t border-ink pt-6"
                 >
                   <SketchImage
-                    src={storyImage(a.body_md) || storyFallbacks[i % storyFallbacks.length]}
+                    src={
+                      storyImage(a.body_md) ||
+                      storyFallbacks[i % storyFallbacks.length]
+                    }
                     alt={a.title}
                     fill
                     variant={i % 2 === 0 ? "default" : "alt"}
@@ -353,6 +292,74 @@ function HomePage() {
             </div>
           )}
         </div>
+      </section>
+
+      {/* Programs */}
+      <section className="py-24 md:py-32 px-6 max-w-7xl mx-auto">
+        <div className="mb-16 flex items-end justify-between gap-6 flex-wrap">
+          <div>
+            <span className="font-mono text-primary text-xs font-medium uppercase tracking-[0.2em] mb-3 block">
+              Our Work
+            </span>
+            <h2 className="font-display text-4xl md:text-5xl font-extrabold tracking-tighter">
+              Active <span className="pencil-underline">projects</span>
+            </h2>
+          </div>
+          <Link
+            to="/events"
+            className="font-mono text-xs uppercase underline underline-offset-4 decoration-primary inline-flex items-center gap-1.5"
+          >
+            View all <ArrowUpRight size={14} />
+          </Link>
+        </div>
+
+        {projects.isLoading && (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="aspect-[4/5] bg-muted animate-pulse rounded"
+              />
+            ))}
+          </div>
+        )}
+
+        {projects.isError && (
+          <p className="text-muted-foreground font-mono text-sm">
+            Programs are temporarily unavailable.
+          </p>
+        )}
+
+        {!projects.isLoading && programs.length === 0 && (
+          <p className="text-muted-foreground">
+            No current projects yet - check back soon.
+          </p>
+        )}
+
+        {programs.length > 0 && (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {programs.map((p, i) => (
+              <Link
+                key={p.id}
+                to="/events"
+                hash={p.slug}
+                className="block group"
+                aria-label={`View ${p.title}`}
+              >
+                <MediaTile
+                  image={
+                    p.image_url || programFallbacks[i % programFallbacks.length]
+                  }
+                  alt={p.title}
+                  imageVariant={i % 2 === 0 ? "default" : "alt"}
+                  aspect="4/5"
+                  title={p.title}
+                  caption={p.lede}
+                />
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* CTA */}
